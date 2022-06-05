@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Mic</title>
+</head>
+<body>
+    <audio id="test" src=""></audio>
+    <script>
+        (()=>{
+            const audio = document.querySelector("#test");
+            navigator.mediaDevices.getUserMedia({video: false, audio: true})
+            .then(stream =>{
+                audio.srcObject = stream;
+                audio.play();
+                
+                
+            }).catch(err => {
+                console.error(err);
+            })
+        })()
+
+
+    </script>
+</body>
+</html>
