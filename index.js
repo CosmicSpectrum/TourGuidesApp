@@ -10,9 +10,14 @@ const io = new Server(server, {
     }
 });
 
+const routes = require('require-all')({dirname: __dirname + '/routes'});
+
+for(const route in routes){
+    app.use(`/${route}`, routes[route]);
+}
+
 io.on('connection', (socket)=>{
     socket.on('join-room', (roomId, userId) => {
-        console.log(userId);
         socket.join(roomId);
         socket.broadcast.to(roomId).emit('user-connected', userId)
 

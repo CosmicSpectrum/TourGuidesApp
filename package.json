@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-peer": "peerjs --port 3002 --path /",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +14,8 @@
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "http": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "require-all": "^3.0.0",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1"
   }

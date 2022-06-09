@@ -25,5 +25,6 @@ export default function Listener({roomId}){
     return(<>
     <audio ref={audioRef}></audio>
     <button onClick={()=>{audioRef.current.play();}}>לחץ כדי להאזין</button>
+    <button onClick={()=>{audioRef.current.pause();}}>שקט עולם</button>
     </>)
 }
