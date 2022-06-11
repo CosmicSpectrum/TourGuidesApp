@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const bodyParser = require('body-parser');
+require('dotenv').config({});
+require("./libs/mongodb");
 const {Server} = require('socket.io');
 const io = new Server(server, {
     cors: {
@@ -9,6 +12,12 @@ const io = new Server(server, {
       methods: ["GET", "POST"]
     }
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 
 const routes = require('require-all')({dirname: __dirname + '/routes'});
 
