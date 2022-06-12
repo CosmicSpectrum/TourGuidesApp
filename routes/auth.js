@@ -1,12 +1,11 @@
 const express = require('express');
-
 const router = express.Router();
-
 const Auth = require('../libs/auth');
-
 const User = require('../models/users');
-
+const PasswordReset = require('../models/passwordReset');
+const mailer = require('../libs/mailer');
 const Validator = require('../libs/validator');
+const otpMiddleware = require('../middlewares/otpValidation');
 
 router.post("/login", (req,res)=>{
     try{
@@ -59,6 +58,84 @@ router.post("/createTourGuide", (req,res)=>{
     }catch(err){
         console.log(err);
         return res.status(500).send("something went wrong");
+    }
+})
+
+
+router.post('/passwordResetRequest', (req,res)=>{
+    try{
+        const {insertedEmail} = req.body;
+        User.findOne({email: insertedEmail}, (err, user)=>{
+            if(err) throw err;
+
+            if(user){
+                mailer.sendMail(insertedEmail).then(({status, otp}) =>{
+                    if(status){
+                        const passwordReset = new PasswordReset({
+                            userId: user._id,
+                            email: insertedEmail,
+                            otp: otp
+                        })
+
+                        passwordReset.save(err=>{
+                            if(err) throw err;
+
+                            return res.status(200).json({status: true});
+                        })
+                    }
+                }).catch(err=>{
+                    throw err;
+                })
+            }else{
+                return res.status(404).json({success: false});
+            }
+        })
+    }catch(err){
+        return res.status(500).send('something went wrong');
+    }
+})
+
+router.post('/validateOtp', (req,res)=>{
+    try{
+        const {otp,email} = req.body;
+
+        PasswordReset.findOne({email}, (err, otpObject)=>{
+            if(err) throw err;
+
+            if(otp === otpObject.otp){
+                return res.status(200).json({validate: true});
+            }else{
+                return res.status(401).json({validate: false});
+            }
+        })
+
+    }catch(err){
+        return res.status(500).send('somthing went wrong');
+    }
+})
+
+router.patch('/updatePassword',otpMiddleware, (req,res)=>{
+    try{
+        const {email,newPassword} = req.body;
+
+        User.findOne({email},(err, user)=>{
+            if(err) throw err;
+
+            if(user){
+                user.password = newPassword;
+    
+                user.save(err=>{
+                    if(err) throw err;
+    
+                    return res.status(200).json({status: true});
+                })
+            }else{
+                return res.status(404).send("user not found");
+            }
+        })
+
+    }catch(err){
+        return res.status(500).send("somthing went wrong");
     }
 })
 

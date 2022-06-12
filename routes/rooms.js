@@ -32,4 +32,53 @@ router.post('/createRoom', (req,res)=>{
     }
 })
 
+router.delete('/deleteRoom', (req,res)=>{
+    try{
+        const {roomId} = req.body;
+        Rooms.deleteOne({_id: roomId}, (err)=>{
+            if(err) throw err;
+            
+            return res.status(200).json({status: true});
+        })
+    }catch(err){
+        return res.status(500).send("somthing went wrong");
+    }
+
+})
+
+router.get('/getRoomsList', (req,res)=>{
+    try{
+        Rooms.find({},(err, records)=>{
+            if(err) throw err;
+
+            return res.status(200).json({rooms: records});
+        })
+    }catch(err){
+        console.log(err);
+        return res.status(500).send("somthing went wrong");
+    }
+})
+
+router.post('/validateRoomCode', (req,res)=>{
+    try{
+        const {roomId, userCode} = req.body;
+
+        Rooms.findById(roomId, (err, room)=>{
+            if(err) throw err;
+
+            if(room){
+                if(room.roomCode == userCode){
+                    return res.status(200).json({status: true});
+                }else{
+                    return res.status(401).json({status: false});
+                }
+            }else{
+                return res.status(404).send("invalid room id");
+            }
+        })
+    }catch(err){
+        return res.status(500).send("somthing went wrong");
+    }
+})
+
 module.exports = router;

@@ -6,7 +6,8 @@ const usersSchema = new Schema({
     username: {type: String,required: true, index: {unique: true}},
     password: {type: String, required: true},
     fullname: {type: String, required: true},
-    phonenumber: {type: String, required: true}
+    phonenumber: {type: String, required: true},
+    email: {type: String, required: true, index: {unique: true}}
 })
 
 usersSchema.pre("save",function(next){
