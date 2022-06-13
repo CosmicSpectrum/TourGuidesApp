@@ -4,9 +4,7 @@ const Rooms = require('../models/rooms');
 const codeGenerator = require('../libs/codeGenerator');
 const router = express.Router();
 
-router.use(authenticateMiddleware);
-
-router.post('/createRoom', (req,res)=>{
+router.post('/createRoom',authenticateMiddleware ,(req,res)=>{
     try{
         const {tourDescription} = req.body;
         const {fullname, _id} = req.user;
@@ -32,7 +30,7 @@ router.post('/createRoom', (req,res)=>{
     }
 })
 
-router.delete('/deleteRoom', (req,res)=>{
+router.delete('/deleteRoom', authenticateMiddleware, (req,res)=>{
     try{
         const {roomId} = req.body;
         Rooms.deleteOne({_id: roomId}, (err)=>{

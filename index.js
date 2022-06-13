@@ -5,6 +5,7 @@ const server = http.createServer(app);
 const bodyParser = require('body-parser');
 require('dotenv').config({});
 require("./libs/mongodb");
+const Cors = require('cors');
 const {Server} = require('socket.io');
 const io = new Server(server, {
     cors: {
@@ -13,6 +14,7 @@ const io = new Server(server, {
     }
 });
 
+app.use(Cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
