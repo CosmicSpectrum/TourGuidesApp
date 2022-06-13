@@ -1,0 +1,8 @@
+@font-face {
+    font-family: Assistant;
+    src: url('./fonts/Assistant-VariableFont_wght.ttf') format("truetype");
+}
+
+.font{
+    font-family: "Assistant";
+}
