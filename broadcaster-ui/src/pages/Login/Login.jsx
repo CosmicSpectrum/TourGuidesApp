@@ -1,12 +1,12 @@
 import React from "react";
-import Bar from "../../components/Bar/Bar";
 import LoginForm from "../../components/LoginForm/LoginForm";
+import InsertCode from "../../components/InsertCode/InsertCode";
 
 export default function Login(){
     return (
         <>
-            <Bar />
             <LoginForm />
+            <InsertCode />
         </>
     )
 }

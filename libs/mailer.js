@@ -37,7 +37,7 @@ module.exports = class sendMail{
             subject: 'אפס סיסמך באפליקציית משדר למורי דרך',
             text: 
             `סיסמה חד פעמית אשר סופקה לך לאיפוס סיסמתך הינה: ${otp}
-            לאיפוס הסיסמה יש להיכנס לקישור הבא: ${process.env.APP_BASE_DOMAIN}/validateOtp?email=${userEmail}
+            לאיפוס הסיסמה יש להיכנס לקישור הבא: ${process.env.APP_BASE_DOMAIN}/resetPassword?email=${userEmail}
             `
         }
     }

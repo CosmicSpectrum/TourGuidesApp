@@ -1,13 +1,14 @@
 import styled from "styled-components";
 
-export const LoginWrapper = styled.div({
+
+export const CodeWrapper = styled.div({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: "5%"
+    marginTop: "7%"
 })
 
-export const InputWrappers = styled.div({
+export const InputWrapper = styled.div({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
