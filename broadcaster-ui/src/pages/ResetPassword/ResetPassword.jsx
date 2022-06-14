@@ -6,8 +6,7 @@ import CreateNewPassword from "../../components/CreateNewPassword/CreateNewPassw
 
 
 export default function ResetPassword(){
-    const [isLoading, setIsLoading] = useState(false);
-    const [otpValidated, setOtpValidated] = useState(true);
+    const [otpValidated, setOtpValidated] = useState(false);
 
     return (
     <>
@@ -15,8 +14,8 @@ export default function ResetPassword(){
             <Card height="55vmax" width="95%">
                 <FormWrapper marginTop={otpValidated ? "10%" : "18%"}>
                     {!otpValidated ? 
-                        <ValidateOtp isLoading={isLoading} /> :
-                        <CreateNewPassword isLoading={isLoading} />
+                        <ValidateOtp setValidateOtp={setOtpValidated} /> :
+                        <CreateNewPassword />
                     }
                 </FormWrapper>
             </Card>

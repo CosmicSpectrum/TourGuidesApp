@@ -38,4 +38,16 @@ export default class AuthNetwork {
             throw null;
         })
     }
+
+    static validateOtp(otp, email){
+        return axios.post(`${this.#baseUrl}auth/validateOtp`, {email,otp}).then(res=>{
+            if(res.data.validate){
+                return true;
+            }else{
+                return false;
+            }
+        }).catch(err=>{
+            return null;
+        })
+    }
 }

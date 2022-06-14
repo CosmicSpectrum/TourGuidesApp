@@ -103,10 +103,14 @@ router.post('/validateOtp', (req,res)=>{
         PasswordReset.findOne({email}, (err, otpObject)=>{
             if(err) throw err;
 
-            if(otp === otpObject.otp){
-                return res.status(200).json({validate: true});
+            if(otpObject){
+                if(otp === otpObject.otp){
+                    return res.status(200).json({validate: true});
+                }else{
+                    return res.status(200).json({validate: false});
+                }
             }else{
-                return res.status(401).json({validate: false});
+                return res.status(200).json({validate: false});
             }
         })
 
