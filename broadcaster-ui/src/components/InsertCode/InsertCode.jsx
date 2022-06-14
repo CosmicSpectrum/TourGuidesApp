@@ -28,7 +28,7 @@ export default function InsertCode(){
             AuthNetwork.getRoom(roomCodeRef.current.value).then(room=>{
                 if(room){
                     setRoom(room);
-                    Navigate('/room');
+                    Navigate(`/room/${room.roomCode}`);
                 }else{
                     setOpen(true);
                     setIsLoading(false)

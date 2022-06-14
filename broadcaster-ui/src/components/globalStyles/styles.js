@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
-export const Title = styled.p(({fontSize})=>({
+export const Title = styled.p(({fontSize,marginBottom})=>({
     fontSize,
     textAlign: "center",
-    color: "#2e7d32"
+    color: "#2e7d32",
+    marginBottom
 }))
 
 export const Card = styled.div(({width, height})=>({

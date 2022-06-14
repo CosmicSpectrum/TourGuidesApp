@@ -53,7 +53,7 @@ router.get('/getRoomByCode', (req,res)=>{
             if(room){
                 return res.status(200).json({room});
             }else{
-                return res.status(404).send('room not found');
+                return res.status(200).send('room not found');
             }
         })
     }catch(err){

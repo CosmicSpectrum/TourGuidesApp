@@ -25,11 +25,11 @@ router.post("/login", (req,res)=>{
                         const token = Auth.createToken(user._id);
                         res.status(200).json({token});
                     }else{
-                        return res.status(401).send('incorrect password')
+                        return res.status(200).send('incorrect password')
                     }
                 })
             }else{
-                return res.status(401).send("user not found");
+                return res.status(200).send("user not found");
             }
         })
     }catch(err){
@@ -41,13 +41,14 @@ router.post("/login", (req,res)=>{
 
 router.post("/createTourGuide", (req,res)=>{
     try{
-        const {username, password, fullname, phonenumber} = req.body;
+        const {username, password, fullname, phonenumber,email} = req.body;
         
         const user = new User({
             username: username,
             password: password,
             fullname: fullname,
-            phonenumber: phonenumber
+            phonenumber: phonenumber,
+            email: email
         });
 
         user.save((err)=>{
@@ -87,7 +88,7 @@ router.post('/passwordResetRequest', (req,res)=>{
                     throw err;
                 })
             }else{
-                return res.status(404).json({success: false});
+                return res.status(200).json({success: false});
             }
         })
     }catch(err){
@@ -130,7 +131,7 @@ router.patch('/updatePassword',otpMiddleware, (req,res)=>{
                     return res.status(200).json({status: true});
                 })
             }else{
-                return res.status(404).send("user not found");
+                return res.status(200).send("user not found");
             }
         })
 
