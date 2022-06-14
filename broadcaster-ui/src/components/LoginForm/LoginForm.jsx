@@ -1,4 +1,4 @@
-import React, {useState,useRef} from "react";
+import React, {useState,useRef, useEffect} from "react";
 import {Title, Card, Label, inputDesign, Paragraph} from '../globalStyles/styles';
 import { LoginWrapper,InputWrappers } from "./style";
 import TextField from '@mui/material/TextField';
@@ -18,14 +18,23 @@ export default function LoginForm(){
     const [isLoading, setIsLoading] = useState(false);
     const [isErrorUsername, setUsernameError] = useState(false);
     const [isErrorPassword, setPasswordError] = useState(false);
+    const [isEmailError, setEmailError] = useState(false);
     const [snackBarMessage, setMessage] = useState('')
     const [toggleResetPassword, setResetPassword] = useState(true);
     const [open, setOpen] = useState(false);
     const [isSuccessfulRequest, setSuccesseful] = useState(false);
     const Navigate = useNavigate();
+    const emailRef = useRef();
     const usernameRef = useRef();
     const passwordRef = useRef();
-    const emailRef = useRef();
+
+    useEffect(()=>{
+        if(toggleResetPassword){
+            passwordRef.current.value = null;
+        }else{
+            emailRef.current.value = null;
+        }
+    },[toggleResetPassword])
 
     const login = ()=>{
         if(usernameRef.current.value.length !== 0 && passwordRef.current.value.length !== 0 ){
@@ -50,7 +59,7 @@ export default function LoginForm(){
     }
 
     const resetPasswordRequest = ()=>{
-        if(emailRef.current.value.length !== 0){
+        if(emailRef.current.value.length !== 0 && validateEmail(emailRef.current.value)){
             setIsLoading(true);
             AuthNetwork.requestPasswordChange(emailRef.current.value).then(status=>{
                 if(status){
@@ -69,6 +78,7 @@ export default function LoginForm(){
                 setMessage("קרתה תקלה אצלנו, נסו להתחבר שנית מאוחר יותר.");
             })
         }
+        setEmailError(emailRef.current.value.length === 0 || !validateEmail(emailRef.current.value))
     }
 
     const handleClose = ()=>{
@@ -77,6 +87,15 @@ export default function LoginForm(){
         if(isSuccessfulRequest){
             setSuccesseful(false);
         }
+    }
+
+    const validateEmail = (email)=>{
+        const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+        if(!regex.test(email)){
+            return false;
+        }
+        return true;
     }
 
     return (
@@ -134,6 +153,8 @@ export default function LoginForm(){
                         label="הכנס כתובת אימייל" 
                         variant="standard" 
                         inputRef={emailRef}
+                        helperText={isEmailError && 'הכנס כתובת מייל תקינה'}
+                        error={isEmailError}
                     />
                     <ButtonComponent 
                         title="אפס סיסמה" 
