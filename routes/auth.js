@@ -121,7 +121,7 @@ router.post('/validateOtp', (req,res)=>{
 
 router.patch('/updatePassword',otpMiddleware, (req,res)=>{
     try{
-        const {email,newPassword} = req.body;
+        const {email, newPassword} = req.body;
 
         User.findOne({email},(err, user)=>{
             if(err) throw err;
@@ -131,11 +131,12 @@ router.patch('/updatePassword',otpMiddleware, (req,res)=>{
     
                 user.save(err=>{
                     if(err) throw err;
-    
-                    return res.status(200).json({status: true});
+                    
+                    const token = Auth.createToken(user._id);
+                    return res.status(200).json({status: true, token});
                 })
             }else{
-                return res.status(200).send("user not found");
+                return res.status(404).json({status: false});
             }
         })
 

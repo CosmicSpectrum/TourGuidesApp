@@ -6,7 +6,6 @@ import {OtpWrapper} from './styles';
 import AuthNetwork from "../../network/authFunctions";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { useMainContext } from "../../context/appContext";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -19,16 +18,15 @@ export default function ValidateOtp({setValidateOtp}){
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState(new URLSearchParams(window.location.search).get('email'));
     const otpRef = useRef();
-    const {setRoomCode} = useMainContext();
 
     const handleValidation = ()=>{
         if(otpRef.current.value.length !== 0){
             setIsLoading(true)
             AuthNetwork.validateOtp(otpRef.current.value,email).then(isValidated=>{
                 if(isValidated){
+                    sessionStorage.setItem('otp', otpRef.current.value);
                     setValidateOtp(true);
                 }else{
-                    setRoomCode(otpRef.current.value);
                     setOpen(true);
                     setIsLoading(false);
                     setMessage("הקוד שהוכנס איננו תקין. בדקו את הקוד ונסו שנית");

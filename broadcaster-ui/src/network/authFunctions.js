@@ -50,4 +50,18 @@ export default class AuthNetwork {
             return null;
         })
     }
+
+    static updatePassword(otp,email, newPassword){
+        return axios.patch(`${this.#baseUrl}auth/updatePassword`,
+        {email, newPassword}, {
+            headers: {'x-otp-post-validation': otp}}).then(res=>{
+                if(res.data.status){
+                    return {status: true, token: res.data.token};
+                }else{
+                    return false;
+                }
+            }).catch(err=>{
+                return null;
+            })
+    }
 }

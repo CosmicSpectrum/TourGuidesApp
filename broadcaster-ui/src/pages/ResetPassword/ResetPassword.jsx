@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import {Card} from '../../components/globalStyles/styles';
 import {CardWrapper, FormWrapper} from './styles'
 import ValidateOtp from "../../components/ValidateOtp/ValidateOtp";
@@ -7,6 +7,12 @@ import CreateNewPassword from "../../components/CreateNewPassword/CreateNewPassw
 
 export default function ResetPassword(){
     const [otpValidated, setOtpValidated] = useState(false);
+
+    useEffect(()=>{
+        if(sessionStorage.getItem('otp')){
+            setOtpValidated(true);
+        }
+    }, [])
 
     return (
     <>
