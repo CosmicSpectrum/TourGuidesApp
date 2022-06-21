@@ -6,6 +6,7 @@ const PasswordReset = require('../models/passwordReset');
 const mailer = require('../libs/mailer');
 const Validator = require('../libs/validator');
 const otpMiddleware = require('../middlewares/otpValidation');
+const auth = require('../middlewares/auth');
 
 router.post("/login", (req,res)=>{
     try{
@@ -23,7 +24,7 @@ router.post("/login", (req,res)=>{
         
                     if(isMatch){
                         const token = Auth.createToken(user._id);
-                        res.status(200).json({token});
+                        res.status(200).json({token, user});
                     }else{
                         return res.status(200).send('incorrect password')
                     }
@@ -37,6 +38,10 @@ router.post("/login", (req,res)=>{
         return res.status(500).send("somthing went wrong");
     }
 
+})
+
+router.get('/getUser',auth,(req,res)=>{
+    return res.status(200).json({user: req.user});
 })
 
 router.post("/createTourGuide", (req,res)=>{

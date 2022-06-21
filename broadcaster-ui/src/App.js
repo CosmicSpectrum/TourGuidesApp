@@ -13,6 +13,7 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import {createTheme, ThemeProvider} from '@mui/material';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
 import Bar from './components/Bar/Bar';
+import CreateRoom from './pages/CreateRoom/CreateRoom';
 
 const theme = createTheme({
   direction: 'rtl'
@@ -46,6 +47,7 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/notSupported' element={<NotSupported />} />
             <Route path='/resetPassword' element={<ResetPassword />} />
+            <Route path='/createRoom' element={<CreateRoom />} />
             <Route path='/' element={<Navigate to="/login" replace />} />
           </Routes>
         </ThemeProvider>

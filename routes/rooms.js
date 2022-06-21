@@ -21,7 +21,7 @@ router.post('/createRoom',authenticateMiddleware ,(req,res)=>{
             if(err)
                 throw err;
 
-            return res.status(200).json({status: true});
+            return res.status(200).json({status: true, room: Room});
         })
 
     }catch(err){

@@ -8,6 +8,7 @@ import Cookie from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useMainContext } from "../../context/appContext";
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -27,6 +28,7 @@ export default function LoginForm(){
     const emailRef = useRef();
     const usernameRef = useRef();
     const passwordRef = useRef();
+    const {setUser} = useMainContext();
 
     useEffect(()=>{
         if(toggleResetPassword){
@@ -39,9 +41,10 @@ export default function LoginForm(){
     const login = ()=>{
         if(usernameRef.current.value.length !== 0 && passwordRef.current.value.length !== 0 ){
             setIsLoading(true);
-            AuthNetwork.login(usernameRef.current.value,passwordRef.current.value).then(token=>{
-                if(token){
-                    Cookie.set('auth-token', token,{expires: 1});
+            AuthNetwork.login(usernameRef.current.value,passwordRef.current.value).then(response=>{
+                if(response){
+                    Cookie.set('auth-token', response.token,{expires: 1});
+                    setUser(response.user);
                     Navigate('/createRoom');
                 }else{
                     setMessage('שם משתמש או סיסמה אינם נכונים.');

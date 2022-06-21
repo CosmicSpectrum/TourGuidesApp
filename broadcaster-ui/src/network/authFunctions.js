@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookie from 'js-cookie'
 
 export default class AuthNetwork {
     static #baseUrl = 'http://localhost:3001/';
@@ -18,7 +19,7 @@ export default class AuthNetwork {
     static login(username,password){
         return axios.post(`${this.#baseUrl}auth/login`, {username,password}).then(res=>{
             if(res.data.token){
-                return res.data.token;
+                return res.data;
             }else{
                 return null;
             }
@@ -63,5 +64,15 @@ export default class AuthNetwork {
             }).catch(err=>{
                 return null;
             })
+    }
+
+    static getUser(){
+        const authToken = Cookie.get("auth-token");
+        return axios.get(`${this.#baseUrl}auth/getUser`,
+        {headers: {"x-auth-token": authToken}}).then((res)=>{
+            return res.data.user;
+        }).catch(err=>{
+            return null;
+        })
     }
 }
