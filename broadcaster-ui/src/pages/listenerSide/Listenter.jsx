@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from "react"; 
 import { myPeer } from "../../utils/peerConnection";
 import io from 'socket.io-client'
-const socket = io('http://localhost:3001');
+const socket = io('http://172.20.10.10:3001');
 
 
 export default function Listener({roomId}){

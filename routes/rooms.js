@@ -32,8 +32,8 @@ router.post('/createRoom',authenticateMiddleware ,(req,res)=>{
 
 router.delete('/deleteRoom', authenticateMiddleware, (req,res)=>{
     try{
-        const {roomId} = req.body;
-        Rooms.deleteOne({_id: roomId}, (err)=>{
+        const {roomId} = req.query;
+        Rooms.deleteOne({roomCode: roomId}, (err)=>{
             if(err) throw err;
             
             return res.status(200).json({status: true});
@@ -54,6 +54,22 @@ router.get('/getRoomByCode', (req,res)=>{
                 return res.status(200).json({room});
             }else{
                 return res.status(200).send('room not found');
+            }
+        })
+    }catch(err){
+        return res.status(500).send("somthing went wrong");
+    }
+})
+
+router.get('/getRoomByCreator', authenticateMiddleware, (req,res)=>{
+    try{
+        Rooms.findOne({creatorId: req.user._id},(err, room)=>{
+            if(err) throw err;
+
+            if(room){
+                return res.status(200).json(room);
+            }else{
+                return res.status(200).send(false);
             }
         })
     }catch(err){

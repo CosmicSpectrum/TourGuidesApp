@@ -14,6 +14,7 @@ import {createTheme, ThemeProvider} from '@mui/material';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
 import Bar from './components/Bar/Bar';
 import CreateRoom from './pages/CreateRoom/CreateRoom';
+import AdminRoom from './pages/adminRoom/adminRoom';
 
 const theme = createTheme({
   direction: 'rtl'
@@ -42,12 +43,12 @@ function App() {
         <ThemeProvider theme={theme}>
           <Bar />
           <Routes>
-            <Route path='/talker' element={<Broadcaster roomId={"1234"} socket={socket} />} />
-            <Route path='/listener' element={<Listener roomId={"1234"} socket={socket} />} />
+            <Route path='/listener' element={<Listener roomId={"e2ak"} socket={socket} />} />
             <Route path='/login' element={<Login />} />
             <Route path='/notSupported' element={<NotSupported />} />
             <Route path='/resetPassword' element={<ResetPassword />} />
             <Route path='/createRoom' element={<CreateRoom />} />
+            <Route path='/room-admin/:roomId' element={<AdminRoom />} />
             <Route path='/' element={<Navigate to="/login" replace />} />
           </Routes>
         </ThemeProvider>

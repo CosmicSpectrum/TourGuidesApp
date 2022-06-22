@@ -9,7 +9,6 @@ const Cors = require('cors');
 const {Server} = require('socket.io');
 const io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000",
       methods: ["GET", "POST"]
     }
 });
@@ -35,6 +34,10 @@ io.on('connection', (socket)=>{
         socket.on('disconnect', ()=>{
             socket.broadcast.to(roomId).emit('user-disconnected', userId);
         })
+    })
+
+    socket.on("roomEnded", roomId=>{
+        socket.broadcast.to(roomId).emit('room-closed');
     })
 })
 

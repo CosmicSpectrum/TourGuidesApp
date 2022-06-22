@@ -33,6 +33,14 @@ export default function CreateRoom(){
         }
     },[user])
 
+    useEffect(()=>{
+        RoomNetwork.getRoomByCreator().then(room=>{
+            if(room){
+                Navigate(`/room-admin/${room.roomCode}`);
+            }
+        })
+    }, [])
+
     const handleClose = ()=>{
         setOpen(false);
     }
