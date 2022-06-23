@@ -3,12 +3,11 @@ import Cookie from 'js-cookie'
 
 export default class RoomNetwork{
     static #baseUrl = 'http://172.20.10.10:3001/rooms';
-    static #token = Cookie.get('auth-token');
 
     static createRoom(tourDescription){
         return axios.post(`${this.#baseUrl}/createRoom`, 
             {tourDescription}, 
-            {headers: {"x-auth-token": this.#token}}).then(res=>{
+            {headers: {"x-auth-token": Cookie.get("auth-token")}}).then(res=>{
                 if(res.data.status){
                     return res.data.room;
                 }
@@ -19,7 +18,7 @@ export default class RoomNetwork{
 
     static deleteRoom(roomId){
         return axios.delete(`${this.#baseUrl}/deleteRoom?roomId=${roomId}`, 
-         {headers: {'x-auth-token': this.#token}}).then(res=>{
+         {headers: {'x-auth-token': Cookie.get("auth-token")}}).then(res=>{
             if(res.data.status){
                 return true;
             }
@@ -30,7 +29,7 @@ export default class RoomNetwork{
 
     static getRoomByCreator(){
         return axios.get(`${this.#baseUrl}/getRoomByCreator`,
-        {headers: {"x-auth-token": this.#token}}).then(res=>{
+        {headers: {"x-auth-token": Cookie.get('auth-token')}}).then(res=>{
             if(res.data){
                 return res.data;
             }
