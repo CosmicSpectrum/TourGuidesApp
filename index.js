@@ -3,6 +3,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
+const authenticateMiddleware = require('./middlewares/auth');
 require('dotenv').config({});
 require("./libs/mongodb");
 const Cors = require('cors');

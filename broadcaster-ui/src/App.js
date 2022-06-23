@@ -15,6 +15,7 @@ import ResetPassword from './pages/ResetPassword/ResetPassword';
 import Bar from './components/Bar/Bar';
 import CreateRoom from './pages/CreateRoom/CreateRoom';
 import AdminRoom from './pages/adminRoom/adminRoom';
+import Cookie from 'js-cookie';
 
 const theme = createTheme({
   direction: 'rtl'
@@ -43,13 +44,14 @@ function App() {
         <ThemeProvider theme={theme}>
           <Bar />
           <Routes>
-            <Route path='/listener' element={<Listener roomId={"e2ak"} socket={socket} />} />
+            <Route path='/listener' element={<Listener roomId={"qinA"} socket={socket} />} />
             <Route path='/login' element={<Login />} />
             <Route path='/notSupported' element={<NotSupported />} />
             <Route path='/resetPassword' element={<ResetPassword />} />
             <Route path='/createRoom' element={<CreateRoom />} />
             <Route path='/room-admin/:roomId' element={<AdminRoom />} />
-            <Route path='/' element={<Navigate to="/login" replace />} />
+            <Route path="/room/:roomId" element={<></>} />
+            <Route path='/' element={!Cookie.get('auth-token') ? <Navigate to="/login" replace /> : <Navigate to="/createRoom" replace />} />
           </Routes>
         </ThemeProvider>
       </CacheProvider>

@@ -56,6 +56,9 @@ export default function AdminRoom(){
     const endRoom = ()=>{
         RoomNetwork.deleteRoom(roomId).then(res=>{
             if(res){
+                Stream.getTracks().forEach((track)=>{
+                    track.stop();
+                });
                 Navigate('/createRoom');
                 socket.emit('roomEnded', roomId);
             }

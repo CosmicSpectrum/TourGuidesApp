@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookie from 'js-cookie'
 
 export default class RoomNetwork{
-    static #baseUrl = 'http://172.20.10.10:3001/rooms';
+    static #baseUrl = 'http://localhost:3001/rooms';
 
     static createRoom(tourDescription){
         return axios.post(`${this.#baseUrl}/createRoom`, 
