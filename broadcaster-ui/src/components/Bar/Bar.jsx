@@ -1,7 +1,8 @@
 import React from "react";
-import {BarWrapper, UserLabelCenterWrapper, LogoutCenterWrapper} from './style'
+import {BarWrapper, Image,LogoWrapper, LogoutCenterWrapper} from './style'
 import {Paragraph} from '../globalStyles/styles';
 import { useMainContext } from "../../context/appContext";
+import imageSrc from '../../media/logonew.png';
 
 export default function Bar({}){
     const {logout,user} = useMainContext();
@@ -17,6 +18,9 @@ export default function Bar({}){
                 </LogoutCenterWrapper>
             </>
             }
+            <LogoWrapper>
+                <Image src={imageSrc} />
+            </LogoWrapper>
         </BarWrapper>
     )
 }

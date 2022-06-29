@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 
 export default function AdminRoom(){
     const [Stream , setStream] = useState(null);
+    const [userId, setUserId] = useState([]);
     const {user, socket ,getUser} = useMainContext();
     const Navigate = useNavigate();
     const {roomId} = useParams();
@@ -27,7 +28,8 @@ export default function AdminRoom(){
 
     useEffect(()=>{
         myPeer.on("open", userId=>{
-            socket.emit('join-room', roomId, userId)
+            socket.emit('join-room', roomId, userId);
+            setUserId(userId)
         });
     }, [])
 
@@ -36,8 +38,21 @@ export default function AdminRoom(){
             socket.on('user-connected', userId=>{
                 myPeer.call(userId,Stream);
             })
+
+            myPeer.listAllPeers(peers=>{
+                if(peers.length > 1){
+                    peers = filterPeerArray(peers, userId);
+                    peers.map(peer=>{
+                        myPeer.call(peer,Stream);
+                    })
+                }
+            })
         }
     }, [Stream])
+
+    const filterPeerArray = (peers, userId)=>{
+        return peers.filter(peer => peer !== userId);
+    }
 
     const openMic = ()=>{
         if(!Stream){
@@ -56,11 +71,11 @@ export default function AdminRoom(){
     const endRoom = ()=>{
         RoomNetwork.deleteRoom(roomId).then(res=>{
             if(res){
-                Stream.getTracks().forEach((track)=>{
+                socket.emit('roomEnded', roomId);
+                Stream && Stream.getTracks().forEach((track)=>{
                     track.stop();
                 });
                 Navigate('/createRoom');
-                socket.emit('roomEnded', roomId);
             }
         })
     }

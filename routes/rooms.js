@@ -77,4 +77,21 @@ router.get('/getRoomByCreator', authenticateMiddleware, (req,res)=>{
     }
 })
 
+router.get('/getRoom', (req,res)=>{
+    const {roomCode} = req.query;
+    try{
+        Rooms.findOne({roomCode}, (err,room)=>{
+            if(err) throw err;
+
+            if(room){
+                return res.status(200).json(room);
+            }else{
+                return res.status(200).send(false);
+            }
+        })
+    }catch(err){
+        return res.status(500).send('something went wrong');
+    }
+})
+
 module.exports = router;

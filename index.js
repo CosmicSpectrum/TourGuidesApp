@@ -31,14 +31,15 @@ io.on('connection', (socket)=>{
     socket.on('join-room', (roomId, userId) => {
         socket.join(roomId);
         socket.broadcast.to(roomId).emit('user-connected', userId)
-
-        socket.on('disconnect', ()=>{
-            socket.broadcast.to(roomId).emit('user-disconnected', userId);
-        })
     })
 
-    socket.on("roomEnded", roomId=>{
+    socket.on("roomEnded", (roomId)=>{
         socket.broadcast.to(roomId).emit('room-closed');
+        socket.leave(roomId);
+    })
+
+    socket.on('userLeave', roomId=>{
+        socket.leave(roomId);
     })
 })
 

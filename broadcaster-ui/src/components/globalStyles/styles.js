@@ -20,12 +20,13 @@ export const Label = styled.p(({marginTop})=>({
     marginTop
 }))
 
-export const Paragraph = styled.p(({fontSize,textAlign,textColor, marginTop, marginRight})=>({
+export const Paragraph = styled.p(({fontSize,textAlign,textColor, marginTop, marginRight,direction})=>({
     fontSize,
     color: !textColor ? '#2e7d32' : textColor,
     textAlign,
     marginTop,
-    marginRight
+    marginRight,
+    direction
 }))
 
 export const inputDesign = {

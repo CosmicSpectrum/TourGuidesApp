@@ -9,7 +9,7 @@ const ContextProvider = ({children})=>{
     const [token, setToken] = useState(Cookie.get("auth-token"));
     const [user, setUser] = useState(null);
     const [roomCode, setRoomCode] = useState('');
-    const [room, setRoom] = useState({});
+    const [room, setRoom] = useState(null);
 
     const getUser = ()=>{
         AuthNetwork.getUser().then((user)=>{

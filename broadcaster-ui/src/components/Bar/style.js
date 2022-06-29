@@ -22,3 +22,12 @@ export const LogoutCenterWrapper = styled.div({
     left: '30px',
     transform: "translateY(-50%)"
 })
+
+export const LogoWrapper = styled.div({
+    display: 'flex',
+    justifyContent: 'center'
+})
+
+export const Image = styled.img({
+    height: '9vmax'
+})
