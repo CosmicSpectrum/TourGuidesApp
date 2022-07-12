@@ -55,6 +55,25 @@ export default function Room(){
         })
     }
 
+    const exitRoom = ()=>{
+        Swal.fire({
+            title: "האם תראה לעזוב את הטיול?",
+            icon: "question",
+            text: "האם תרצו לעזוב את חדר הסיור?",
+            cancelButtonText: "סגור",
+            confirmButtonText: "צא",
+            showCancelButton: true,
+            reverseButtons: true,
+            confirmButtonColor: "#2e7d32",
+            cancelButtonColor: "#d32f2f"
+        }).then((result)=>{
+            if(result.isConfirmed){
+                socket.emit('userLeave', roomId);
+                Navigate('/')
+            }
+        })
+    }
+
     const playStream =()=>{
         streamRef.current.play();
     }
@@ -87,6 +106,7 @@ export default function Room(){
                 <EndButtonWrapper>
                     <ButtonComponent 
                         title='יציאה'
+                        onClick={()=>{exitRoom()}}
                     />
                 </EndButtonWrapper>
             </Card>
