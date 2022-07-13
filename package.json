@@ -20,6 +20,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.6",
     "nodemailer": "^6.7.5",
+    "path": "^0.12.7",
     "require-all": "^3.0.0",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1"

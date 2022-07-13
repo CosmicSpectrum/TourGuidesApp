@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const path = require('path');
 const bodyParser = require('body-parser');
-const authenticateMiddleware = require('./middlewares/auth');
 require('dotenv').config({});
 require("./libs/mongodb");
 const Cors = require('cors');
@@ -14,6 +14,7 @@ const io = new Server(server, {
     }
 });
 
+app.use(express.static(path.join(__dirname, '/broadcaster-ui/build')));
 app.use(Cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -43,6 +44,11 @@ io.on('connection', (socket)=>{
     })
 })
 
+app.get('*', (req,res)=>{
+    res.sendFile(path.join(__dirname+'/broadcaster-ui/build/index.html'));
+})
+
 server.listen(3001, ()=>{
     console.log('Server listening on 3001');
 })
+

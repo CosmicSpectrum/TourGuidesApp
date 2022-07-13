@@ -1,5 +1,6 @@
 import Peer from 'peerjs';
 export const myPeer = new Peer(undefined,{
-    host: '/',
-    port: "3002"
+    host: 'peerjs-listen-on-the-way.herokuapp.com',
+    port: 443,
+    secure: true
 });
