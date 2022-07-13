@@ -48,7 +48,7 @@ app.get('*', (req,res)=>{
     res.sendFile(path.join(__dirname+'/broadcaster-ui/build/index.html'));
 })
 
-server.listen(8080, ()=>{
+server.listen(process.env.PORT, ()=>{
     console.log('Server listening on 3001');
 })
 
