@@ -8,6 +8,9 @@
     "start-peer": "peerjs --port 3002 --path / --allow_discovery true",
     "start": "node index.js"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
