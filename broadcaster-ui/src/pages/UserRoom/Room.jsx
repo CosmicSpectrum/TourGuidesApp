@@ -24,22 +24,28 @@ export default function Room(){
     },[room])
 
     useEffect(()=>{
-        myPeer.on("open", userId=>{
-            socket.emit('join-room', roomId, userId)
-        });
+        if(!sessionStorage.getItem('firstLoad')){
+            sessionStorage.setItem("firstLoad","hey");
+            window.location.reload(false);
+        }else{
+            sessionStorage.clear();
+            myPeer.on("open", userId=>{
+                socket.emit('join-room', roomId, userId)
+            });
 
-        myPeer.on("call", call => {
-            call.answer();
-            call.on('stream', stream => {
-                if(streamRef.current){
-                    streamRef.current.srcObject = stream;
-                }
+            myPeer.on("call", call => {
+                call.answer();
+                call.on('stream', stream => {
+                    if(streamRef.current){
+                        streamRef.current.srcObject = stream;
+                    }
+                })
             })
-        })
 
-        socket.on('room-closed',()=>{
-            roomEnded();
-        })
+            socket.on('room-closed',()=>{
+                roomEnded();
+            })
+        }
     }, [])
 
     const roomEnded = ()=>{
