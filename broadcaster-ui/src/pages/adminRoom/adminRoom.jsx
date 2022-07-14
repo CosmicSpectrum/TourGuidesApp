@@ -28,6 +28,7 @@ export default function AdminRoom(){
 
     useEffect(()=>{
         myPeer.on("open", userId=>{
+            console.log('hello');
             socket.emit('join-room', roomId, userId);
             setUserId(userId)
         });
