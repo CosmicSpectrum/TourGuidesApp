@@ -32,7 +32,7 @@ export default function AdminRoom(){
             socket.emit('join-room', roomId, userId);
             setUserId(userId)
         });
-    }, [])
+    }, [user])
 
     useEffect(()=>{
         if(Stream){

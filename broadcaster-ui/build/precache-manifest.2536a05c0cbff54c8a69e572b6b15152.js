@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "8c3ab3a86d93a1d2bdae",
+    "revision": "f7a5feb86a2fd133552e",
     "url": "/static/css/main.d074ddf0.chunk.css"
   },
   {
-    "revision": "8c3ab3a86d93a1d2bdae",
-    "url": "/static/js/main.8c3ab3a8.chunk.js"
+    "revision": "f7a5feb86a2fd133552e",
+    "url": "/static/js/main.f7a5feb8.chunk.js"
   },
   {
     "revision": "403d339da6b7942ca3aa",
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/static/media/Assistant-VariableFont_wght.922abef4.ttf"
   },
   {
-    "revision": "0f406c81f7018451857a928833cce43f",
+    "revision": "a570766f0a77e53b5c0add231b8ada99",
     "url": "/index.html"
   }
 ];
