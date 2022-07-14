@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/static/media/Assistant-VariableFont_wght.922abef4.ttf"
   },
   {
-    "revision": "95b3f0b86c210e0e906b06cf0ce0e43f",
+    "revision": "17414e4fde5f124e96ef207344ec263c",
     "url": "/index.html"
   }
 ];
