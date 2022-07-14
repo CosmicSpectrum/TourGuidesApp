@@ -27,11 +27,16 @@ export default function AdminRoom(){
     },[user]);
 
     useEffect(()=>{
-        console.log(myPeer);
-        myPeer.on("open", userId=>{
-            socket.emit('join-room', roomId, userId);
-            setUserId(userId)
-        });
+        if(!sessionStorage.getItem('firstLoad')){
+            sessionStorage.setItem("firstLoad","hey");
+            window.location.reload(false);
+        }else{
+            sessionStorage.clear();
+            myPeer.on("open", userId=>{
+                socket.emit('join-room', roomId, userId);
+                setUserId(userId)
+            });
+        }
     }, [myPeer])
 
     useEffect(()=>{
