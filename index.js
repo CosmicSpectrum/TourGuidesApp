@@ -29,8 +29,8 @@ for(const route in routes){
 }
 
 io.on('connection', (socket)=>{
-    console.log("new socket connected");
     socket.on('join-room', (roomId, userId) => {
+        console.log("user: " + userId + "joined room: " + roomId );
         socket.join(roomId);
         socket.broadcast.to(roomId).emit('user-connected', userId)
     })
