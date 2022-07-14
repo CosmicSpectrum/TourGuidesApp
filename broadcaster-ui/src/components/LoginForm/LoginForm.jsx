@@ -64,7 +64,7 @@ export default function LoginForm(){
     const resetPasswordRequest = ()=>{
         if(emailRef.current.value.length !== 0 && validateEmail(emailRef.current.value)){
             setIsLoading(true);
-            AuthNetwork.requestPasswordChange(emailRef.current.value).then(status=>{
+            AuthNetwork.requestPasswordChange(emailRef.current.value.toLowerCase()).then(status=>{
                 if(status){
                     setOpen(true);
                     setIsLoading(false);
