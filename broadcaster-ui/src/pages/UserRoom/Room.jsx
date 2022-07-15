@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Card, Title, Paragraph} from '../../components/globalStyles/styles';
 import {RoomWrapper, MicButtonWrappers, StreamAudio, EndButtonWrapper,DescriptionWrapper} from './styles';
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ export default function Room(){
     const streamRef = useRef();
     const Navigate = useNavigate();
     const {room, socket, setRoom} = useMainContext();
+    const [peerId, setPeerId] = useState('');
 
     useEffect(()=>{
         if(!room){
@@ -30,6 +31,7 @@ export default function Room(){
         }else{
             sessionStorage.clear();
             myPeer.on("open", userId=>{
+                setPeerId(userId);
                 socket.emit('join-room', roomId, userId)
             });
 
@@ -74,7 +76,7 @@ export default function Room(){
             cancelButtonColor: "#d32f2f"
         }).then((result)=>{
             if(result.isConfirmed){
-                socket.emit('userLeave', roomId);
+                socket.emit('userLeave', roomId, peerId);
                 Navigate('/')
             }
         })

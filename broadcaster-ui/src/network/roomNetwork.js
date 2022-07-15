@@ -48,4 +48,15 @@ export default class RoomNetwork{
             throw false;
         })
     }
+
+    static getActiveListeners(roomCode){
+        return axios.get(`${this.#baseUrl}/getListeners?roomCode=${roomCode}`,
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(res=>{
+            if(res.data){
+                return res.data.listeners;
+            }
+        }).catch(err=>{
+            throw err;
+        })
+    }
 }

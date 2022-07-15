@@ -13,7 +13,6 @@ import Swal from 'sweetalert2';
 
 export default function AdminRoom(){
     const [Stream , setStream] = useState(null);
-    const [userId, setUserId] = useState([]);
     const {user, socket ,getUser} = useMainContext();
     const Navigate = useNavigate();
     const {roomId} = useParams();
@@ -33,8 +32,7 @@ export default function AdminRoom(){
         }else{
             sessionStorage.clear();
             myPeer.on("open", userId=>{
-                socket.emit('join-room', roomId, userId);
-                setUserId(userId)
+                socket.emit('join-room', roomId, userId, true);
             });
         }
     }, [myPeer])
@@ -45,20 +43,11 @@ export default function AdminRoom(){
                 myPeer.call(userId,Stream);
             })
 
-            myPeer.listAllPeers(peers=>{
-                if(peers.length > 1){
-                    peers = filterPeerArray(peers, userId);
-                    peers.map(peer=>{
-                        myPeer.call(peer,Stream);
-                    })
-                }
+            RoomNetwork.getActiveListeners(roomId).then(listeners=>{
+                listeners.map(listener=> myPeer.call(listener, Stream))
             })
         }
     }, [Stream])
-
-    const filterPeerArray = (peers, userId)=>{
-        return peers.filter(peer => peer !== userId);
-    }
 
     const openMic = ()=>{
         if(!Stream){

@@ -1,15 +1,15 @@
 {
-  "main.css": "/static/css/main.d074ddf0.chunk.css",
-  "main.js": "/static/js/main.a30ec13a.chunk.js",
-  "main.js.map": "/static/js/main.a30ec13a.chunk.js.map",
-  "static/js/1.403d339d.chunk.js": "/static/js/1.403d339d.chunk.js",
-  "static/js/1.403d339d.chunk.js.map": "/static/js/1.403d339d.chunk.js.map",
-  "runtime~main.js": "/static/js/runtime~main.229c360f.js",
-  "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
-  "static/media/logonew.png": "/static/media/logonew.eb02e34a.png",
-  "static/media/index.css": "/static/media/Assistant-VariableFont_wght.922abef4.ttf",
-  "static/css/main.d074ddf0.chunk.css.map": "/static/css/main.d074ddf0.chunk.css.map",
-  "index.html": "/index.html",
-  "precache-manifest.34cb344e3456e1f0099effca80a268c7.js": "/precache-manifest.34cb344e3456e1f0099effca80a268c7.js",
-  "service-worker.js": "/service-worker.js"
+  "files": {
+    "main.css": "/static/css/main.37bc8bb1.css",
+    "main.js": "/static/js/main.646fa44a.js",
+    "static/media/Assistant-VariableFont_wght.ttf": "/static/media/Assistant-VariableFont_wght.8260db3b313ce1ff6e7f.ttf",
+    "static/media/logonew.png": "/static/media/logonew.ca2219e61a5fa9d86daa.png",
+    "index.html": "/index.html",
+    "main.37bc8bb1.css.map": "/static/css/main.37bc8bb1.css.map",
+    "main.646fa44a.js.map": "/static/js/main.646fa44a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.37bc8bb1.css",
+    "static/js/main.646fa44a.js"
+  ]
 }

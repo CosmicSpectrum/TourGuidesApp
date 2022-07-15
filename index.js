@@ -4,6 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const path = require('path');
 const bodyParser = require('body-parser');
+const ListenersUtils = require('./utils/listeners.utils');
 require('dotenv').config({});
 require("./libs/mongodb");
 const Cors = require('cors');
@@ -29,8 +30,13 @@ for(const route in routes){
 }
 
 io.on('connection', (socket)=>{
-    socket.on('join-room', (roomId, userId) => {
-        console.log("user: " + userId + "joined room: " + roomId );
+    socket.on('join-room', (roomId, userId,isAdmin) => {
+        if(!isAdmin){
+            ListenersUtils.addNewListener(userId,roomId).catch(err=>{
+                console.log("adding user to array failed because: " + err.message);
+            })
+        }
+
         socket.join(roomId);
         socket.broadcast.to(roomId).emit('user-connected', userId)
     })
@@ -40,7 +46,10 @@ io.on('connection', (socket)=>{
         socket.leave(roomId);
     })
 
-    socket.on('userLeave', roomId=>{
+    socket.on('userLeave', (roomId, userId)=>{
+        ListenersUtils.removeListener(userId,roomId).catch(err=>{
+            console.log("remove user operation faild because: " + err.message);
+        })
         socket.leave(roomId);
     })
 })
@@ -50,6 +59,6 @@ app.get('*', (req,res)=>{
 })
 
 server.listen(process.env.PORT, ()=>{
-    console.log('Server listening on 3001');
+    console.log(`Server listening on ${process.env.PORT} `);
 })
 

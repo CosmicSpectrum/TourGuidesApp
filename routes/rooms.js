@@ -94,4 +94,21 @@ router.get('/getRoom', (req,res)=>{
     }
 })
 
+router.get('/getListeners', (req,res)=>{
+    const {roomCode} = req.query;
+    try{
+        Rooms.findOne({roomCode},["activeUsers"] ,(err,listeners)=>{
+            if(err) throw err;
+
+            if(listeners){
+                return res.status(200).json({listeners: listeners.activeUsers});
+            }
+            return res.status(200).json({listeners: []})
+        })
+    }catch(err){
+        return res.status(500).send("somthing went wrong");
+    }
+
+})
+
 module.exports = router;
