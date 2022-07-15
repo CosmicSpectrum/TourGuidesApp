@@ -1,7 +1,5 @@
 import React, {useLayoutEffect,useEffect} from 'react';
 import {Routes, Route, useNavigate, Navigate} from "react-router-dom";
-import Listener from './pages/listenerSide/Listenter';
-import {socket} from './utils/initiateSocket';
 import isMobile from './utils/isMobile';
 import NotSupported from './pages/NotSupported/NotSupported';
 import Login from './pages/Login/Login';
@@ -16,18 +14,29 @@ import CreateRoom from './pages/CreateRoom/CreateRoom';
 import AdminRoom from './pages/adminRoom/adminRoom';
 import Cookie from 'js-cookie';
 import Room from './pages/UserRoom/Room';
+import {useMainContext} from './context/appContext'
 
 const theme = createTheme({
   direction: 'rtl'
 });
+
+const themeLtr = createTheme({
+  direction: "ltr"
+})
 
 const cacheRtl = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin]
 });
 
+const cacheLtr = createCache({
+  key: "muiltr",
+  stylisPlugins: [prefixer]
+})
+
 function App() {
   const navigation = useNavigate();
+  const {language} = useMainContext();
 
   useEffect(()=>{
     if(!isMobile()){
@@ -36,15 +45,14 @@ function App() {
   },[])
 
   useLayoutEffect(()=>{
-    document.body.setAttribute("dir", 'rtl');
+    document.body.setAttribute("dir", language ? 'rtl': 'ltr');
   })
 
   return (
-      <CacheProvider value={cacheRtl}>
-        <ThemeProvider theme={theme}>
+      <CacheProvider value={language ? cacheRtl : cacheLtr}>
+        <ThemeProvider theme={language ? theme : themeLtr}>
           <Bar />
           <Routes>
-            <Route path='/listener' element={<Listener roomId={"jA53"} socket={socket} />} />
             <Route path='/login' element={<Login />} />
             <Route path='/notSupported' element={<NotSupported />} />
             <Route path='/resetPassword' element={<ResetPassword />} />

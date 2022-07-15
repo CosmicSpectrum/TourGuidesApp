@@ -28,7 +28,7 @@ export default function LoginForm(){
     const emailRef = useRef();
     const usernameRef = useRef();
     const passwordRef = useRef();
-    const {setUser} = useMainContext();
+    const {setUser, language} = useMainContext();
 
     useEffect(()=>{
         if(toggleResetPassword){
@@ -47,13 +47,13 @@ export default function LoginForm(){
                     setUser(response.user);
                     Navigate('/createRoom');
                 }else{
-                    setMessage('שם משתמש או סיסמה אינם נכונים.');
+                    setMessage(language ? 'שם משתמש או סיסמה אינם נכונים.': "Incorrect username or password.");
                     setOpen(true);
                     setIsLoading(false);
                 }
             }).catch(err=>{
                 setIsLoading(false);
-                setMessage("קרתה תקלה אצלנו, נסו להתחבר שנית מאוחר יותר.");
+                setMessage(language ? "קרתה תקלה אצלנו, נסו להתחבר שנית מאוחר יותר." : "Oops... Somthing went wrong. Try again later");
                 setOpen(true);
             })
         }
@@ -68,17 +68,17 @@ export default function LoginForm(){
                 if(status){
                     setOpen(true);
                     setIsLoading(false);
-                    setMessage("נשלח מייל לאיפוס הסיסמה למייל אותו הזנתם.");
+                    setMessage(language ? "נשלח מייל לאיפוס הסיסמה למייל אותו הזנתם." : "Check your email to continue the proccess.");
                     setSuccesseful(true);
                 }else{
                     setOpen(true);
                     setIsLoading(false);
-                    setMessage("המייל שהזנתם לא שייך לאף משתמש רשום, בדקו את האיות ונסו שנית.");
+                    setMessage(language ? "המייל שהזנתם לא שייך לאף משתמש רשום, בדקו את האיות ונסו שנית." : "The email inserted doesn't exist, please check it and try again.");
                 }
             }).catch(err=>{
                 setOpen(true);
                 setIsLoading(false)
-                setMessage("קרתה תקלה אצלנו, נסו להתחבר שנית מאוחר יותר.");
+                setMessage(language ? "קרתה תקלה אצלנו, נסו שנית מאוחר יותר." : "Oops... Somthing went wrong. Try again later");
             })
         }
         setEmailError(emailRef.current.value.length === 0 || !validateEmail(emailRef.current.value))
@@ -106,18 +106,18 @@ export default function LoginForm(){
             <Card height="45vmax" width="95%">
             {toggleResetPassword ? <InputWrappers>
                     <Title fontSize={"4vmax"} marginBottom={'0'}>
-                        כניסת מורי דרך
+                        {language ? "כניסת מורי דרך" : "Guides Login"}
                     </Title>
                     <TextField 
                         id="username" 
                         sx={inputDesign} 
                         color="success" 
                         autoComplete={"off"} 
-                        label="שם משתמש" 
+                        label={language ? "שם משתמש" : "Username"} 
                         variant="standard" 
                         inputRef={usernameRef}
                         error={isErrorUsername}
-                        helperText={isErrorUsername ? 'יש למלא את השדה' : ''}
+                        helperText={isErrorUsername && (language ? 'יש למלא את השדה' : "Please fill the input")}
                     />
                     <TextField 
                         type={"password"} 
@@ -125,27 +125,27 @@ export default function LoginForm(){
                         sx={{...inputDesign, marginBottom: "0"}} 
                         color="success" 
                         autoComplete={"off"} 
-                        label="סיסמה" 
+                        label={language ? "סיסמה" : "Password"} 
                         variant="standard" 
                         inputRef={passwordRef}
                         error={isErrorPassword}
-                        helperText={isErrorPassword ? 'יש למלא את השדה' : ''}
+                        helperText={isErrorPassword && (language ? 'יש למלא את השדה' : "Please fill the input")}
                     />
                     <ButtonComponent 
-                        title="התחבר" 
+                        title={language ? "התחבר" : "Login"} 
                         isLoading={isLoading}
                         onClick={()=>{login()}}
                     />
                     <Label marginTop={"3%"} onClick={()=>{setResetPassword(!toggleResetPassword)}}>
-                        שכחת סיסמה?
+                        {language ?"שכחת סיסמה?" : "Forgot Password?"}
                     </Label>
                 </InputWrappers> : 
                 <InputWrappers>
                     <Title fontSize={"4vmax"}>
-                        איפוס סיסמה
+                        {language ? "איפוס סיסמה" : "Reset Password"}
                     </Title>
                     <Paragraph fontSize={'1.7vmax'}>
-                        הכנס את המייל שאיתו נרשמת למערכת:
+                        {language ? "הכנס את המייל שאיתו נרשמת למערכת:" : "Please enter your email address:"}
                     </Paragraph>
                     <TextField 
                         id="email" 
@@ -153,19 +153,19 @@ export default function LoginForm(){
                         sx={inputDesign} 
                         color="success" 
                         autoComplete={"off"} 
-                        label="הכנס כתובת אימייל" 
+                        label={language ? "הכנס כתובת אימייל" : "Insert mail here"} 
                         variant="standard" 
                         inputRef={emailRef}
-                        helperText={isEmailError && 'הכנס כתובת מייל תקינה'}
+                        helperText={isEmailError && (language ? 'הכנס כתובת מייל תקינה' : "Please enter a valid email address")}
                         error={isEmailError}
                     />
                     <ButtonComponent 
-                        title="אפס סיסמה" 
+                        title={language ? "אפס סיסמה" : "Submit"} 
                         isLoading={isLoading} 
                         onClick={()=>{resetPasswordRequest();}}
                     />
                     <Label marginTop={"5%"} onClick={()=>{setResetPassword(!toggleResetPassword)}}>
-                        חזור להתחברות
+                        {language ? "חזור להתחברות" : "Back to login"}
                     </Label>
                 </InputWrappers>
                 }

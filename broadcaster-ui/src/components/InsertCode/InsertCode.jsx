@@ -17,7 +17,7 @@ export default function InsertCode(){
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [open, setOpen] = useState(false);
-    const {setRoom} = useMainContext();
+    const {setRoom,language} = useMainContext();
     const Navigate = useNavigate();
     const roomCodeRef = useRef();
 
@@ -48,33 +48,36 @@ export default function InsertCode(){
         <CodeWrapper>
             <Card height="37vmax" width={"95%"}>
                 <Title fontSize={"4vmax"}>
-                    כניסת מטיילים
+                   {language ? "כניסת מטיילים" : "Tourists Entrence"}
                 </Title>
                 <InputWrapper>
                     <Paragraph fontSize={"1.7vmax"} textAlign="center">
-                        מצטרפים לסיור? הכניסו את קוד החדר שקיבלתם מהמדריך כאן:
+                        {language ? "מצטרפים לסיור? הכניסו את קוד החדר שקיבלתם מהמדריך כאן:" : "Joining a tour? Please enter the room code you got from the guide here:"}
                     </Paragraph>
                     <TextField 
                         id="roomCode"
-                        label="הכנס קוד חדר"
+                        label={language ? "הכנס קוד חדר" : "Insert code here"}
                         color="success"
                         autoComplete="off"
                         variant="standard"
                         sx={{...inputDesign, marginBottom: "0"}}
                         inputRef={roomCodeRef}
                         error={isError}
-                        helperText={isError ? 'יש למלא את השדה' : ''}
+                        helperText={isError &&  (language ?  'יש למלא את השדה' : 'Please fill the input')}
                     />
                     <ButtonComponent 
                         isLoading={isLoading} 
-                        title="הכנס לחדר"
+                        title={language ? "הכנס לחדר" : 'Join room'}
                         onClick={()=>{getRoom()}}
                     />
                 </InputWrapper>
             </Card>
             <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                    לא הצלחנו למצוא את החדר שאתם מבקשים.. נסו לבדוק את הקוד שהזנתם ולנסות שוב.
+                   {language ? 
+                    "לא הצלחנו למצוא את החדר שאתם מבקשים.. נסו לבדוק את הקוד שהזנתם ולנסות שוב."
+                    : "Incorrect room code. Please recheck the code you entered and try again"
+                }
                  </Alert>
             </Snackbar> 
         </CodeWrapper>

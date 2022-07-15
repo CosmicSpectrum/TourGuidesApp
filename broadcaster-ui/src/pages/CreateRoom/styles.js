@@ -7,9 +7,9 @@ export const PageWrapper = styled.div({
     marginTop: "5%"
 });
 
-export const InputWrapper = styled.div({
-    marginRight: "4%"
-})
+export const InputWrapper = styled.div(({language})=>({
+    [language ? "marginRight" : "marginLeft"]: "4%"
+}))
 
 export const ButtonWrapper = styled.div({
     display: 'flex',

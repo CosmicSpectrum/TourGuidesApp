@@ -10,7 +10,8 @@ const ContextProvider = ({children})=>{
     const [user, setUser] = useState(null);
     const [roomCode, setRoomCode] = useState('');
     const [room, setRoom] = useState(null);
-
+    const [language, setLanguage] = useState((Cookie.get('language') === "true" || Cookie.get('language') === undefined) ? true : false);
+    
     const getUser = ()=>{
         AuthNetwork.getUser().then((user)=>{
             setUser(user);
@@ -26,7 +27,7 @@ const ContextProvider = ({children})=>{
     }
 
 
-    const value = {token,setToken,roomCode,setRoomCode,room, setRoom, socket, user, getUser, setUser,logout};
+    const value = {token,setToken,roomCode,setRoomCode,room, setRoom, socket, user, getUser, setUser,logout, language,setLanguage };
     return <MainContext.Provider value={value}>{children}</MainContext.Provider>
 }
 
