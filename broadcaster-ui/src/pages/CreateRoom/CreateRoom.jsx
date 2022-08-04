@@ -19,7 +19,7 @@ export default function CreateRoom(){
     const [fetching, setFecthing] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const {user,getUser, setRoom} = useMainContext();
+    const {user,getUser, setRoom, language} = useMainContext();
     const Navigate = useNavigate();
     const descriptionRef = useRef();
 
@@ -64,11 +64,11 @@ export default function CreateRoom(){
         
         switch(true){
             case Now < 12:
-                return "בוקר טוב";
+                return (language ? "בוקר טוב" : "Good Morning");
             case Now > 12 && Now < 18:
-                return "צהריים טובים";
+                return (language ? "צהריים טובים" : "Good Afternoon");
             default:
-                return "ערב טוב";
+                return (language ? "ערב טוב": "Good Evening");
         }
     }
 
@@ -78,14 +78,14 @@ export default function CreateRoom(){
                {!fetching ? 
                <>  
                    {user && <Title fontSize="3vmax" >{`${dayTime()} ${user.fullname}!`}</Title>}
-                    <Paragraph marginRight="4%" marginTop="1%">
-                        לאן מטיילים היום?
+                    <Paragraph marginRight={language ? "4%" : undefined} marginLeft={!language ? "4%" : undefined} marginTop="1%">
+                       {language ? "לאן מטיילים היום?" : "Where are we heading today?"}
                     </Paragraph>
-                    <InputWrapper>
+                    <InputWrapper language={language}>
                         <TextField 
                             id='trip-description'
                             variant='filled'
-                            label="הכנס תיאור קצר על הטיול"
+                            label={language ? "הכנס תיאור קצר על הטיול" : "Please enter a short description on today's tour"}
                             color='success'
                             inputRef={descriptionRef}
                             multiline
@@ -97,7 +97,7 @@ export default function CreateRoom(){
                     <ButtonWrapper>
                         <ButtonComponent 
                             isLoading={isLoading} 
-                            title='צור טיול'
+                            title={language ? 'צור טיול' : "Create Tour"}
                             onClick={()=>{createRoom()}}
                         />
                     </ButtonWrapper>
@@ -111,7 +111,7 @@ export default function CreateRoom(){
             </Card>
             <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={'error'} sx={{ width: '100%' }}>
-                   אופס... קרתה אצלנו תקלה. נסו שנית מאוחר יותר
+                   {language ? "אופס... קרתה אצלנו תקלה. נסו שנית מאוחר יותר" : "Oops... Somthing went wrong. Please try again later"}
                  </Alert>
             </Snackbar> 
         </PageWrapper>

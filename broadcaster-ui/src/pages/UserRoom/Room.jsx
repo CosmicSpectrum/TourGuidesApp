@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Card, Title, Paragraph} from '../../components/globalStyles/styles';
 import {RoomWrapper, MicButtonWrappers, StreamAudio, EndButtonWrapper,DescriptionWrapper} from './styles';
 import { useParams } from 'react-router-dom';
@@ -13,7 +13,8 @@ export default function Room(){
     const {roomId} = useParams();
     const streamRef = useRef();
     const Navigate = useNavigate();
-    const {room, socket, setRoom} = useMainContext();
+    const {room, socket, setRoom, language} = useMainContext();
+    const [peerId, setPeerId] = useState('');
 
     useEffect(()=>{
         if(!room){
@@ -30,6 +31,7 @@ export default function Room(){
         }else{
             sessionStorage.clear();
             myPeer.on("open", userId=>{
+                setPeerId(userId);
                 socket.emit('join-room', roomId, userId)
             });
 
@@ -50,11 +52,11 @@ export default function Room(){
 
     const roomEnded = ()=>{
         Swal.fire({
-            title: "הטיול נגמר",
+            title: language ? "הטיול נגמר" : "Tour Ended",
             icon: "error",
-            text: "המדריך סגר את חדר הטיול והוא הסתיים.",
+            text: language ?  "המדריך סגר את חדר הטיול והוא הסתיים." : "The guide ended the tour",
             confirmButtonColor: "#2e7d32",
-            confirmButtonText: "חזור לדף הבית",
+            confirmButtonText: language ? "חזור לדף הבית" : "Back To Homepage",
         }).then(()=>{
             socket.emit('userLeave', roomId);
             Navigate('/')
@@ -63,18 +65,18 @@ export default function Room(){
 
     const exitRoom = ()=>{
         Swal.fire({
-            title: "האם תראה לעזוב את הטיול?",
+            title: language ? "יציאה מהטיול" : "Leave Tour",
+            text: language ? "האם אתם בטוחים שתרצו לעזוב את הטיול?" :"Are you sure you want to leave the tour room?",
             icon: "question",
-            text: "האם תרצו לעזוב את חדר הסיור?",
-            cancelButtonText: "סגור",
-            confirmButtonText: "צא",
+            cancelButtonText: language ? "ביטול" : "Cancel",
+            confirmButtonText: language ? "עזוב טיול" : "Leave Tour",
             showCancelButton: true,
-            reverseButtons: true,
+            reverseButtons: language ? true : false,
             confirmButtonColor: "#2e7d32",
             cancelButtonColor: "#d32f2f"
         }).then((result)=>{
             if(result.isConfirmed){
-                socket.emit('userLeave', roomId);
+                socket.emit('userLeave', roomId, peerId);
                 Navigate('/')
             }
         })
@@ -91,8 +93,8 @@ export default function Room(){
     return (
         <RoomWrapper>
             <Card width="95%" height="85vmax">
-                <Title fontSize={'3.5vmax'}>{`קוד החדר: ${roomId}`}</Title>
-                <Title fontSize={'2.5vmax'}>{'תיאור הטיול:'}</Title>
+                <Title fontSize={'3.5vmax'}>{`${language ? "קוד החדר:" : "Room Code:"} ${roomId}`}</Title>
+                <Title fontSize={'2.5vmax'}>{language ?'תיאור הטיול:' : "Tour Description:"}</Title>
                 <DescriptionWrapper>
                     <Paragraph direction="rtl" textAlign="center">
                         {room && room.tourDescription}
@@ -100,18 +102,18 @@ export default function Room(){
                 </DescriptionWrapper>
                 <MicButtonWrappers>
                     <ButtonComponent 
-                        title="האזן לשידור"
-                        onClick={playStream}
-                    />
-                    <ButtonComponent 
-                        title="הפסק להאזין"
+                        title={language ? "הפסק להאזין" : "Stop Listening"}
                         color={"error"}
                         onClick={stopStream}
+                    />
+                    <ButtonComponent 
+                        title={language ? "האזן לשידור" : "Start Listening"}
+                        onClick={playStream}
                     />
                 </MicButtonWrappers>
                 <EndButtonWrapper>
                     <ButtonComponent 
-                        title='יציאה'
+                        title={language ? 'יציאה מהטיול' : "Leave Tour"}
                         onClick={()=>{exitRoom()}}
                     />
                 </EndButtonWrapper>

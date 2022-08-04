@@ -15,13 +15,21 @@ export const UserLabelCenterWrapper = styled.div({
     transform: "translateY(-50%)"
 })
 
-export const LogoutCenterWrapper = styled.div({
+export const LogoutCenterWrapper = styled.div(({language})=>({
     position: 'absolute',
     margin: '0',
     top: "50%",
-    left: '30px',
+    [language ? "left" : "right"]: '30px',
     transform: "translateY(-50%)"
-})
+}))
+
+export const LanguageWrapper = styled.div(({language}) => ({
+    position: 'absolute',
+    margin: '0',
+    top: "50%",
+    [language ? "right" : "left"]: '30px',
+    transform: "translateY(-50%)"
+}))
 
 export const LogoWrapper = styled.div({
     display: 'flex',

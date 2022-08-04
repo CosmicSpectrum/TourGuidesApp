@@ -9,6 +9,7 @@ import Cookie from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useMainContext } from "../../context/appContext";
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -26,6 +27,7 @@ export default function CreateNewPassword(){
     const firstPasswordRef = useRef();
     const secondPasswordRef = useRef();
     const Navigate = useNavigate();
+    const {language} = useMainContext();
     
 
     const updatePassword = ()=>{
@@ -38,7 +40,7 @@ export default function CreateNewPassword(){
                     Navigate('/createRoom');
                 }
             }).catch(err=>{
-                setMessagae('אופס.. קרתה תקלה אצלנו, נסו שוב בעוד מספר דקות');
+                setMessagae(language ? 'אופס.. קרתה תקלה אצלנו, נסו שוב בעוד מספר דקות' : "Oops... Somthing went wrong. Please try again later");
                 setOpen(true);
                 setIsLoading(false);
             })
@@ -51,7 +53,7 @@ export default function CreateNewPassword(){
         if(firstPasswordRef.current.value === secondPasswordRef.current.value){
             return true;
         }else{
-            setMessagae('שימו לב שהסיסמאות שהזנתם אינן תואמות');
+            setMessagae(language ? 'שימו לב שהסיסמאות שהזנתם אינן תואמות' : "The passwords you've entered doesn't match");
             setOpen(true);
             return false;
         }
@@ -73,14 +75,14 @@ export default function CreateNewPassword(){
     return (
         <OtpWrapper>
             <Title fontSize={"4vmax"}>
-                איפוס סיסמה
+                {language ? "איפוס סיסמה" : "Create New Password"}
             </Title>
             <Paragraph fontSize={"1.7vmax"}>
-                אנא הזן את הסיסמה החדשה
+                {language ? "אנא הזן את הסיסמה החדשה" : "Please enter the new password"}
             </Paragraph>
             <TextField 
                 id="firstType"
-                label={"סיסמה חדשה"}
+                label={language ? "סיסמה חדשה" : "New Password"}
                 sx={inputDesign}
                 autoComplete="off"
                 variant="standard"
@@ -88,11 +90,11 @@ export default function CreateNewPassword(){
                 type="password"
                 inputRef={firstPasswordRef}
                 error={firstError}
-                helperText={firstError && "יש למלא שדה זה"}
+                helperText={firstError && (language ? "יש למלא שדה זה" : "Please fill the input")}
             />
             <TextField 
                 id="secondType"
-                label={"אימות סיסמה"}
+                label={language ? "אימות סיסמה" : "Reenter password"}
                 sx={inputDesign}
                 autoComplete="off"
                 variant="standard"
@@ -100,11 +102,11 @@ export default function CreateNewPassword(){
                 type={"password"}
                 error={secondError}
                 inputRef={secondPasswordRef}
-                helperText={secondError && "יש למלא שדה זה"}
+                helperText={secondError && (language ? "יש למלא שדה זה" : "Please fill the input")}
             />
             <ButtonComponent 
                 isLoading={isLoading}
-                title="אפס סיסמה"
+                title={language ? "אפס סיסמה" : "Submit"}
                 onClick={()=>{updatePassword()}}
             />
             <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open} autoHideDuration={4000} onClose={handleClose}>

@@ -13,8 +13,7 @@ import Swal from 'sweetalert2';
 
 export default function AdminRoom(){
     const [Stream , setStream] = useState(null);
-    const [userId, setUserId] = useState([]);
-    const {user, socket ,getUser} = useMainContext();
+    const {user, socket ,getUser, language} = useMainContext();
     const Navigate = useNavigate();
     const {roomId} = useParams();
 
@@ -33,8 +32,7 @@ export default function AdminRoom(){
         }else{
             sessionStorage.clear();
             myPeer.on("open", userId=>{
-                socket.emit('join-room', roomId, userId);
-                setUserId(userId)
+                socket.emit('join-room', roomId, userId, true);
             });
         }
     }, [myPeer])
@@ -45,20 +43,11 @@ export default function AdminRoom(){
                 myPeer.call(userId,Stream);
             })
 
-            myPeer.listAllPeers(peers=>{
-                if(peers.length > 1){
-                    peers = filterPeerArray(peers, userId);
-                    peers.map(peer=>{
-                        myPeer.call(peer,Stream);
-                    })
-                }
+            RoomNetwork.getActiveListeners(roomId).then(listeners=>{
+                listeners.map(listener=> myPeer.call(listener, Stream))
             })
         }
     }, [Stream])
-
-    const filterPeerArray = (peers, userId)=>{
-        return peers.filter(peer => peer !== userId);
-    }
 
     const openMic = ()=>{
         if(!Stream){
@@ -88,15 +77,15 @@ export default function AdminRoom(){
 
     const confirmEndTour = ()=>{
         Swal.fire({
-            title: "סיום טיול",
+            title: language ? "סיום טיול" : "End Tour",
             icon: "question",
-            text: "האם אתם בטוחים שתרצו לסיים את הסיור?",
+            text: language ? "האם אתם בטוחים שתרצו לסיים את הסיור?" : "Are you sure you want to end the tour?",
             confirmButtonColor: "#2e7d32",
             cancelButtonColor: "#d32f2f",
-            cancelButtonText: "סגור",
-            confirmButtonText: "סיים סיור",
+            cancelButtonText: language ? "ביטול" : "Cancel",
+            confirmButtonText: language ? "סיים סיור" : "End Tour",
             showCancelButton: true,
-            reverseButtons: true
+            reverseButtons: language ? true : false
         }).then(result=>{
             if(result.isConfirmed){
                 endRoom();
@@ -107,21 +96,21 @@ export default function AdminRoom(){
     return (
         <AdminRoomWrapper>
             <Card width="95%" height="85vmax">
-                <Title fontSize={'3.5vmax'}>{`קוד החדר: ${roomId}`}</Title>
+                <Title fontSize={'3.5vmax'}>{`${language ? "קוד החדר:" : "Room Code:"} ${roomId}`}</Title>
                 <MicButtonWrappers>
                     <ButtonComponent 
-                        title="הפעל מיקרופון"
-                        onClick={()=>{openMic();}}
-                    />
-                    <ButtonComponent 
-                        title="כבה מיקרופון"
+                        title={language ? "כבה מיקרופון" : "Mute Mic"}
                         color={"error"}
                         onClick={()=>{closeMic();}}
+                    />
+                    <ButtonComponent 
+                        title={language ? "הפעל מיקרופון" : "Activate Mic"}
+                        onClick={()=>{openMic();}}
                     />
                 </MicButtonWrappers>
                 <EndButtonWrapper>
                     <ButtonComponent 
-                        title="סיים טיול"
+                        title={language ? "סיים טיול" : "End Tour"}
                         onClick={()=>{confirmEndTour();}}
                     />
                 </EndButtonWrapper>
