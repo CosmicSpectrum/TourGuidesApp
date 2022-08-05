@@ -12,6 +12,6 @@ export class s3BucketStack extends Stack {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL
     })
 
-    s3Bucket.grantReadWrite(new iam.AccountPrincipal("230009180509"));
+    s3Bucket.grantReadWrite(new iam.AccountPrincipal(process.env.ACCOUNTID));
   }
 }

@@ -7,6 +7,7 @@ const usersSchema = new Schema({
     password: {type: String, required: true},
     fullname: {type: String, required: true},
     phonenumber: {type: String, required: true},
+    guidePacks: {type: Array, required: true},
     email: {type: String, required: true, index: {unique: true}}
 })
 

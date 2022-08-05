@@ -4,6 +4,8 @@ const authenticationMiddleware = require('../middlewares/auth');
 const s3Manager = require('filestorage');
 const FileUpload = require('express-fileupload');
 const FileMetadata = require('../models/filtesMetadata');
+const Users = require('../models/users');
+const GuidePack = require('../models/guidePack');
 
 const S3 = new s3Manager(process.env.AWS_ACCESS_KEY,process.env.AWS_SECRET_KEY,process.env.PROJECT_BUCKET);
 
@@ -12,11 +14,15 @@ router.use(FileUpload());
 
 router.post('/upload',(req,res)=>{
     const {file} = req.files;
+    const {fileName, isPublic, fileOwner} = req.body;
     try{
         S3.upload(file.data).then(fileStatus=>{
             const fileMeta = new FileMetadata({
                 uid: fileStatus.fileKey,
-                mimeType: file.mimetype
+                mimeType: file.mimetype,
+                fileName,
+                isPublic,
+                fileOwner
             });
             fileMeta.save(err=>{
                 if(err) throw new Error(err);
@@ -71,5 +77,33 @@ router.delete('/delete',(req,res)=>{
     }
 })
 
+router.get('/getUserFiles', (req,res)=>{
+    const {userId} = req.query;
+    try{
+        FileMetadata.find({fileOwner: userId}, 
+            ["uid","mimeType","isPublic","fileName"],(err, docs)=>{
+            if(err) throw new Error(err);
+
+            return res.status(200).json({files: docs});
+        })
+    }catch(err){
+        return res.status(500).send("something went wrong");
+    }
+})
+
+router.get('/searchFile', (req,res)=>{
+    const {searchQuery} = req.query;
+    try{
+        FileMetadata.find({$text: {$search: searchQuery}, isPublic: true},  
+            { score : { $meta: "textScore" } },
+            (err,docs)=>{
+                if(err) throw new Error(err);
+
+                return res.status(200).json({foundItems: docs});
+            })
+    }catch(err){
+        return res.status(500).send('something went wront');
+    }
+})
 
 module.exports = router;
