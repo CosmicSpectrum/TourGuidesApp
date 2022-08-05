@@ -9,7 +9,7 @@ const authenticateMiddleware = (req,res,next) => {
     }
 
     const {userid} = Auth.validateToken(token);
-    User.findById(userid,['fullname','_id','phonenumber', 'email'], (err, user)=>{
+    User.findById(userid,['fullname','_id','phonenumber', 'email','guidePacks'], (err, user)=>{
         if(err){
             return res.status(500).send("sonthing went wrong");
         }

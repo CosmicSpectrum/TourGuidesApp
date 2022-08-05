@@ -65,7 +65,7 @@ router.delete('/delete',(req,res)=>{
             if(Object.keys(result).length === 0){
                 FileMetadata.deleteOne({uid: fileKey},(err,result)=>{
                     if(err) throw new Error(err);
-                })
+                }).catch(err=> {throw err;})
 
                 return res.status(200).json({status: true});
             }
@@ -73,20 +73,21 @@ router.delete('/delete',(req,res)=>{
             throw new Error(err);
         })
     }catch(err){
+        console.log(err);
         return res.status(500).send('somthing went wrong');
     }
 })
 
 router.get('/getUserFiles', (req,res)=>{
-    const {userId} = req.query;
     try{
-        FileMetadata.find({fileOwner: userId}, 
+        FileMetadata.find({fileOwner: req.user._id}, 
             ["uid","mimeType","isPublic","fileName"],(err, docs)=>{
             if(err) throw new Error(err);
 
             return res.status(200).json({files: docs});
         })
     }catch(err){
+        console.log(err);
         return res.status(500).send("something went wrong");
     }
 })
@@ -102,7 +103,68 @@ router.get('/searchFile', (req,res)=>{
                 return res.status(200).json({foundItems: docs});
             })
     }catch(err){
+        console.log(err);
         return res.status(500).send('something went wront');
+    }
+})
+
+router.post('/createPack', (req,res)=>{
+    const {packName, packItems} = req.body;
+    try{
+        const pack = new GuidePack({
+            packName,
+            packItems
+        })
+
+        pack.save(async err=>{
+            if(err) throw new Error(err);
+
+            const user = await Users.findOne({_id: req.user._id});
+
+            if(user){
+                user.guidePacks.push(pack._id);
+                Users.replaceOne({_id: user._id}, user).then((err,result)=>{
+                    if(err) throw err;
+
+                    return res.status(200).json({status: true});
+                }).catch(err=>{
+                    throw err;
+                });
+            }
+        })
+    }catch(err){
+        console.log(err);
+        return res.status(500).send("something went wrong");
+    }
+})
+
+router.get('/getUserPacks', async (req,res)=>{
+    try{
+        const userPacks = await GuidePack.find({_id: {$in: req.user.guidePacks}});
+
+        return res.status(200).json(userPacks);
+    }catch(err){
+        return res.status(500).send('something went wrong');
+    }
+})
+
+router.delete('/deletePack', (req,res)=>{
+    const {packId} = req.body;
+    try{
+        Users.findOne({_id: req.user._id}, (err, user)=>{
+            const indexToRemove = user.guidePacks.findIndex(pack => packId === pack);
+            user.guidePacks.splice(indexToRemove, 1);
+            user.save(err=>{
+                if(err) throw err;
+                GuidePack.deleteOne({_id: packId}, (err)=>{
+                    if(err) throw err;
+
+                    return res.status(200).json({status: true});
+                })
+            })
+        })
+    }catch(err){
+        return res.status(500).send("something went wrong");
     }
 })
 
