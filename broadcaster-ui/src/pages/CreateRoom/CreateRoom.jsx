@@ -9,6 +9,8 @@ import ButtonComponent from '../../components/Button/ButtonComponent';
 import RoomNetwork from '../../network/roomNetwork';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -78,6 +80,14 @@ export default function CreateRoom(){
                {!fetching ? 
                <>  
                    {user && <Title fontSize="3vmax" >{`${dayTime()} ${user.fullname}!`}</Title>}
+                    <FormControl style={{marginBottom: '3.5rem', width: "95%", margin: "0 auto"}} fullWidth>
+                        <Paragraph marginRight={language ? "4%" : undefined} marginLeft={!language ? "4%" : undefined}>
+                            בחר חבילת עזרים
+                        </Paragraph>
+                        <NativeSelect>
+
+                        </NativeSelect>
+                    </FormControl>
                     <Paragraph marginRight={language ? "4%" : undefined} marginLeft={!language ? "4%" : undefined} marginTop="1%">
                        {language ? "לאן מטיילים היום?" : "Where are we heading today?"}
                     </Paragraph>
@@ -90,7 +100,7 @@ export default function CreateRoom(){
                             inputRef={descriptionRef}
                             multiline
                             maxRows={15}
-                            rows={15}
+                            rows={10}
                             sx={{width: "96%"}}
                         />
                     </InputWrapper>
