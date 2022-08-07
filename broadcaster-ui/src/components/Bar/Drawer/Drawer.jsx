@@ -41,7 +41,6 @@ export default ()=>{
     const ROUTE_REDIRECT = [...(Location.pathname === "/createRoom") 
     ? ['/files'] : ['/createRoom']];
 
-    console.log(Location.pathname);
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
           return;

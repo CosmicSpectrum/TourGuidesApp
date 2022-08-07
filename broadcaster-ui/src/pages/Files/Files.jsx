@@ -8,6 +8,7 @@ import { FetchingWrapper,PageWrapper } from './styles';
 import {Card} from '../../components/globalStyles/styles';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import FileList from '../../components/FileList/FileList';
 
 export default ()=>{
     const {user, getUser, language} = useMainContext();
@@ -49,6 +50,7 @@ export default ()=>{
                         </TabList>
                         </Box>
                         <TabPanel value="1">
+                            <FileList />
                             <IconButton
                                 size="large"
                                 edge="start"
