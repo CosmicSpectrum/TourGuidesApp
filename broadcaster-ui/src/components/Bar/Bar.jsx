@@ -1,16 +1,23 @@
 import React from "react";
-import {BarWrapper, Image,LogoWrapper, LogoutCenterWrapper, LanguageWrapper} from './style'
+import {LogoutCenterWrapper} from './style'
 import {Paragraph} from '../globalStyles/styles';
 import { useMainContext } from "../../context/appContext";
-import imageSrc from '../../media/logonew.png';
-import Cookie from 'js-cookie'
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Drawer from "./Drawer/Drawer";
+
+
 
 export default function Bar({}){
     const {logout,user, language, setLanguage} = useMainContext();
 
     return (
-        <BarWrapper>
-            {user && 
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="sticky" color="success">
+            <Toolbar>
+            <Drawer />
+              {user && 
             <>
                 <LogoutCenterWrapper language={language} onClick={()=>{logout();}}>
                     <Paragraph textColor="white" fontSize="1.7vmax" textAlign="center">
@@ -19,14 +26,8 @@ export default function Bar({}){
                 </LogoutCenterWrapper>
             </>
             }
-            <LogoWrapper>
-                <Image src={imageSrc} />
-            </LogoWrapper>
-            <LanguageWrapper onClick={()=>{Cookie.set("language", !language); setLanguage(!language);}} language={language}>
-                <Paragraph textColor="white" fontSize="1.7vmax" textAlign="center">
-                    {language ? 'EN' : "עב"}
-                </Paragraph>
-            </LanguageWrapper>
-        </BarWrapper>
-    )
+            </Toolbar>
+          </AppBar>
+        </Box>
+      );
 }

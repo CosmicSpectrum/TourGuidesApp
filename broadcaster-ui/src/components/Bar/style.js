@@ -19,7 +19,7 @@ export const LogoutCenterWrapper = styled.div(({language})=>({
     position: 'absolute',
     margin: '0',
     top: "50%",
-    [language ? "left" : "right"]: '30px',
+    [language ? "left" : "right"]: '20px',
     transform: "translateY(-50%)"
 }))
 
@@ -33,7 +33,8 @@ export const LanguageWrapper = styled.div(({language}) => ({
 
 export const LogoWrapper = styled.div({
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flexGrow: 1
 })
 
 export const Image = styled.img({

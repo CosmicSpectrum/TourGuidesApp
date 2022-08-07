@@ -80,12 +80,11 @@ export default function CreateRoom(){
                {!fetching ? 
                <>  
                    {user && <Title fontSize="3vmax" >{`${dayTime()} ${user.fullname}!`}</Title>}
-                    <FormControl style={{marginBottom: '3.5rem', width: "95%", margin: "0 auto"}} fullWidth>
-                        <Paragraph marginRight={language ? "4%" : undefined} marginLeft={!language ? "4%" : undefined}>
-                            בחר חבילת עזרים
+                    <FormControl style={{marginBottom: '2rem', width: "95%", ...(language) ? {marginRight: '2.5%'} : {marginLeft: "2.5%"}}} fullWidth>
+                        <Paragraph marginRight={language ? "1.5%" : undefined} marginLeft={!language ? "1.5%" : undefined}>
+                           {language ? "בחר חבילת עזרים: (אופציונלי)" : "Pick guide pack: (Optional)"}
                         </Paragraph>
-                        <NativeSelect>
-
+                        <NativeSelect color='success'>
                         </NativeSelect>
                     </FormControl>
                     <Paragraph marginRight={language ? "4%" : undefined} marginLeft={!language ? "4%" : undefined} marginTop="1%">
