@@ -14,7 +14,8 @@ import CreateRoom from './pages/CreateRoom/CreateRoom';
 import AdminRoom from './pages/adminRoom/adminRoom';
 import Cookie from 'js-cookie';
 import Room from './pages/UserRoom/Room';
-import {useMainContext} from './context/appContext'
+import {useMainContext} from './context/appContext';
+import Files from './pages/Files/Files';
 
 const theme = createTheme({
   direction: 'rtl'
@@ -59,6 +60,7 @@ function App() {
             <Route path='/createRoom' element={<CreateRoom />} />
             <Route path='/room-admin/:roomId' element={<AdminRoom />} />
             <Route path="/room/:roomId" element={<Room />} />
+            <Route path="/files" element={<Files />} />
             <Route path='/' element={!Cookie.get('auth-token') ? <Navigate to="/login" replace /> : <Navigate to="/createRoom" replace />} />
           </Routes>
         </ThemeProvider>
