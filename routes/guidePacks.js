@@ -81,7 +81,7 @@ router.delete('/delete',(req,res)=>{
 router.get('/getUserFiles', (req,res)=>{
     try{
         FileMetadata.find({fileOwner: req.user._id}, 
-            ["uid","mimeType","isPublic","fileName"],(err, docs)=>{
+            ["uid","mimeType","isPublic","fileName","fileOwner"],(err, docs)=>{
             if(err) throw new Error(err);
 
             return res.status(200).json({files: docs});
