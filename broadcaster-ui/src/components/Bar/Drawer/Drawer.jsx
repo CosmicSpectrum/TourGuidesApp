@@ -19,7 +19,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Divider } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export default ()=>{
+export default function AppDrawer(){
     const {language, user, setLanguage} = useMainContext();
     const [anchor, setAnchor] = useState(language ? "left": "right");
     const [state, setState] = React.useState({
@@ -31,11 +31,13 @@ export default ()=>{
     const Location = useLocation();
     const Navigate = useNavigate();
     const LIST_TITLES_HE = [
-    ...(user && (Location.pathname === '/createRoom') ) ? ['העלאת עזרים'] : ['יצירת חדר'],
+    ...(user ?? (Location.pathname === '/createRoom')) ? ['העלאת עזרים'] : 
+        Cookie.get('auth-token') ? ['יצירת חדר'] : [],
     ...(user) ? ['חבילות עזרי הדרכה'] : [],
     'English'];
     const LIST_TITLES_EN = [
-        ...(user  && (Location.pathname === '/createRoom')) ? ['Upload Guide Helpers'] : ["Create Room"],
+        ...(user  ?? (Location.pathname === '/createRoom')) ? ['Upload Guide Helpers'] :  Cookie.get('auth-token') ? 
+        ["Create Room"] : [],
          ...(user) ?['Guide Packs'] : [],
           'עברית'];
     const ROUTE_REDIRECT = [...(Location.pathname === "/createRoom") 

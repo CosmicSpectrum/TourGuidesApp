@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import FileList from '../../components/FileList/FileList';
 
-export default ()=>{
+export default function Files(){
     const {user, getUser, language} = useMainContext();
     const [value, setValue] = useState('1');
     const [fetching, setFecthing] = useState(true)
@@ -24,7 +24,7 @@ export default ()=>{
         }else if(user){
             setFecthing(false);
         }
-    },[user])
+    },[user,Navigate,getUser])
 
     const handleChange = (event, newValue) => {
         setValue(newValue);

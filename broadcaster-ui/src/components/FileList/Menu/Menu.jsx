@@ -63,7 +63,7 @@ export default function FileMenu({file}){
                 }
             </MenuItem>
             {
-                user._id === file.fileOwner &&
+                user?._id === file.fileOwner &&
                 [
                     <MenuItem onClick={handleClose}>
                         <>

@@ -5,7 +5,7 @@ import { useMainContext } from "../../context/appContext";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Drawer from "./Drawer/Drawer";
+import AppDrawer from "./Drawer/Drawer";
 
 
 
@@ -16,7 +16,7 @@ export default function Bar({}){
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="sticky" color="success">
             <Toolbar>
-            <Drawer />
+            <AppDrawer />
               {user && 
             <>
                 <LogoutCenterWrapper language={language} onClick={()=>{logout();}}>
