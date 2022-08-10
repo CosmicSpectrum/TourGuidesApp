@@ -1,9 +1,9 @@
 import React,{useState, useEffect} from 'react';
-import {List, ListItem, CircularProgress, IconButton, Divider} from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {List, ListItem, CircularProgress, Divider} from '@mui/material';
 import FilesNetwork from '../../network/FilesNetwork';
+import FileMene from './Menu/Menu';
 
-export default ({type})=>{
+export default function FileList ({type}){
     const [fetching,setFecthing] = useState(true);
     const [files, setFiles] = useState([]);
 
@@ -32,9 +32,7 @@ export default ({type})=>{
                         <>
                             <ListItem sx={{justifyContent: "space-between"}} id={index}>
                                 {file.fileName}
-                                <IconButton>
-                                    <MoreVertIcon />
-                                </IconButton>
+                                <FileMene file={file} />
                             </ListItem>
                             <Divider />
                         </>
