@@ -43,10 +43,15 @@ router.get('/download', (req,res)=>{
     try{
         S3.download(fileKey).then(file=>{
             if(file){
-                FileMetadata.findOne({uid: fileKey},["mimeType"],(err,doc)=>{
+                FileMetadata.findOne({uid: fileKey},["mimeType", 'fileName'],(err,doc)=>{
                     if(err) throw new Error(err);
 
-                    return res.status(200).json({buffer: file.Body , mimeType: doc.mimeType});
+                    res.writeHead(200, {
+                        'Content-Type': doc.mimeType,
+                        'Content-disposition': 'attachment;filename=' + doc.fileName,
+                        'Content-Length': file.ContentLength
+                    });
+                    res.end(file.Body);
                 })
             }
         }).catch(err=>{
@@ -65,7 +70,7 @@ router.delete('/delete',(req,res)=>{
             if(Object.keys(result).length === 0){
                 FileMetadata.deleteOne({uid: fileKey},(err,result)=>{
                     if(err) throw new Error(err);
-                }).catch(err=> {throw err;})
+                })
 
                 return res.status(200).json({status: true});
             }

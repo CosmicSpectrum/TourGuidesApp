@@ -32,7 +32,7 @@ export default function FileList ({type}){
                         <>
                             <ListItem sx={{justifyContent: "space-between"}} id={index}>
                                 {file.fileName}
-                                <FileMene file={file} />
+                                <FileMene setFiles={setFiles} file={file} />
                             </ListItem>
                             <Divider />
                         </>

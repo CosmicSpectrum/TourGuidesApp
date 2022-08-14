@@ -18,10 +18,20 @@ export default class FilesNetwork {
         return axios.get(this.#baseUrl + `/download?fileKey=${fileKey}`,
         {headers: {'x-auth-token': Cookie.get('auth-token')},
         responseType: 'blob'}).then(file=>{
-            console.log(file.data);
             if(file.data){
                 return file.data;
             }
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
+
+    static delete(fileKey){
+        return axios.delete(this.#baseUrl + `/delete?fileKey=${fileKey}`,
+        {headers: {'x-auth-token': Cookie.get('auth-token')}})
+        .then(res=>{
+            return res.data.status ? true : false;
         }).catch(err=>{
             console.error(err);
             throw err;

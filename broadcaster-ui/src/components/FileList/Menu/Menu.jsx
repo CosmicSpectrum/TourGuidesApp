@@ -10,7 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilesNetwork from '../../../network/FilesNetwork';
 import SaveAs from 'file-saver';
 
-export default function FileMenu({file}){
+export default function FileMenu({file, setFiles}){
   const [anchorEl, setAnchorEl] = useState(null);
   const {user, language} = useMainContext();
   const open = Boolean(anchorEl);
@@ -25,10 +25,22 @@ export default function FileMenu({file}){
   };
 
   const downloadFile = ()=>{
-    FilesNetwork.download(file.uid).then(file=>{
-        console.log(file);
-        const blob = new Blob([file.buffer], {type: file.mimeType});
-        SaveAs(blob);
+    FilesNetwork.download(file.uid).then(s3Blob=>{
+        SaveAs(s3Blob);
+    }).catch(err=>{
+        console.error(err);
+    })
+  }
+
+  const deleteFile = ()=>{
+    FilesNetwork.delete(file.uid).then(status =>{
+        if(status){
+            setFiles(prev=>{
+                const index = prev.findIndex(currFile => currFile.uid === file.uid );
+                prev.splice(index, 1);
+                return prev;
+            });
+        }
     }).catch(err=>{
         console.error(err);
     })
@@ -54,7 +66,7 @@ export default function FileMenu({file}){
             'aria-labelledby': 'file-menu',
             }}
         >
-            <MenuItem onClick={()=>{handleClose(); downloadFile();}}>
+            <MenuItem onClick={()=>{handleClose(); downloadFile(file);}}>
                 {
                 <>
                     <GetAppIcon /> 
@@ -65,7 +77,7 @@ export default function FileMenu({file}){
             {
                 user?._id === file.fileOwner &&
                 [
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={()=>{handleClose(); deleteFile();}}>
                         <>
                             <DeleteIcon />
                             {language ? "מחק קובץ" : 'Delete File'}
