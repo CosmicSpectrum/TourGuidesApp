@@ -4,7 +4,7 @@ import Cookie from 'js-cookie';
 export default class FilesNetwork {
     static #baseUrl = 'http://localhost:3001/guidePacks';
 
-    static getUserFiles(){
+    static async getUserFiles(){
         return axios.get(this.#baseUrl + "/getUserFiles", 
         {headers: {'x-auth-token': Cookie.get("auth-token")}}).then(files=>{
             return files.data && files.data.files;
@@ -14,7 +14,7 @@ export default class FilesNetwork {
         })
     }
 
-    static getPublicFiles(){
+    static async getPublicFiles(){
         return axios.get(this.#baseUrl + '/getPublicFiles',
         {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(files=>{
             return files.data && files.data.files;
@@ -53,7 +53,18 @@ export default class FilesNetwork {
                 return false;
             }
         }).catch(err=>{
-            return false;
+            console.error(err);
+            throw err;
+        })
+    }
+
+    static createPack(pack){
+        return axios.post(this.#baseUrl + '/createPack',pack,
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(res=>{
+            return res.data.status;
+        }).catch(err=>{
+            console.error(err);
+            throw err;
         })
     }
     

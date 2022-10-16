@@ -87,7 +87,7 @@ export default function UploadFilePopup({setFileList, setIsShown}){
                 </Button>
                 <FormControlLabel 
                     control={<Checkbox color='success' onChange={e=> setFileInfo(prev=> ({...prev, isPublic: e.target.checked}))} />}
-                    label={language ? 'קובץ פומבי?' : 'Public file?'}
+                    label={language ? 'קובץ ציבורי?' : 'Public file?'}
                 />
             </ButtonWrapper>
             <Button 

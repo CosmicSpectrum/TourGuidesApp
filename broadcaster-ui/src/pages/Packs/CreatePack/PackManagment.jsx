@@ -1,14 +1,17 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { FetchingWrapper,PageWrapper } from '../PackList/styles';
-import {Card, Title, inputDesign, Paragraph} from '../../../components/globalStyles/styles';
+import {Card, Title, inputDesign, Paragraph, ErrorLabel} from '../../../components/globalStyles/styles';
 import Cookie from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useMainContext } from '../../../context/appContext';
-import { CircularProgress, TextField, Button} from '@mui/material';
+import { CircularProgress, TextField, Button, FormControlLabel,Checkbox} from '@mui/material';
 import { Add, Upload } from '@mui/icons-material';
 import PopupBase from '../../../components/PopupBase/PopupBase';
 import SelectFilesPopup from '../../../components/SelectFilePopup/SelectFilePopup';
+import SelectFilesList from '../../../components/SelectFilesList/SelectFilesList';
 import styled from 'styled-components';
+import FilesNetwork from '../../../network/FilesNetwork';
+
 
 
 const FormWrapper = styled.div(({language})=>({
@@ -24,6 +27,12 @@ const ListWrapper = styled.div({
     width: "90%",
     height: "55vmax",
     alignItems: "center"
+});
+
+const ButtonsWrapper = styled.div({
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between'
 })
 
 export default function PackManagment(){
@@ -33,6 +42,8 @@ export default function PackManagment(){
     const [isFetching,setFecthing] = useState(true);
     const [isFilled, setIsFilled] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showError, setShowError] = useState(false);
     const [pack, setPack] = useState({
         packName: null,
         packItems: [],
@@ -49,22 +60,39 @@ export default function PackManagment(){
         }
     },[user,Navigate,getUser])
 
-    useEffect(()=>{window.onbeforeunload = ()=>{return 'test'}})
+    useEffect(()=>{window.onbeforeunload = ()=>{return 'test'}},[])
 
     useEffect(()=>{
         if(pack.packName && pack.packItems.length > 0){
             setIsFilled(true);
+        }else{
+            setIsFilled(false);
         }
-    },[isFilled, setIsFilled])
+    },[setIsFilled, pack])
 
     const getTitle = ()=>{
         if(params.current.get('edit')){
-            return language ? 'עריכת מארז' : 'Edit Pack';
+            return language ? 'ערוך מארז' : 'Edit Pack';
         }else if(params.current.get('disabled')){
-            return language ? 'צפייה במארז' : 'View Pack';
+            return language ? 'צפה במארז' : 'View Pack';
         }else{
-            return language ? 'יצירת מארז' : 'Create Pack';
+            return language ? 'צור מארז' : 'Create Pack';
         }
+    }
+    
+    const createPack = ()=>{
+        setIsLoading(true);
+        FilesNetwork.createPack(pack).then(res=>{
+            if(res){
+                Navigate('/packs');
+            }else{
+                setShowError(true);
+                setIsLoading(false);
+            }
+        }).catch(err=>{
+            console.error(err);
+        })
+
     }
 
     return (
@@ -89,17 +117,28 @@ export default function PackManagment(){
                         color='success'
                     />
                     <ListWrapper>
-                        <Button 
-                            variant='contained' 
-                            color="success" 
-                            startIcon={<Add />}
-                            sx={{width: "100%"}}
-                            onClick={()=> setShowPopup(true)}
-                        >
-                            {language ? 'הוסף קובץ' : 'Add A File'}
-                        </Button>
+                        <ButtonsWrapper>
+                            <Button 
+                                variant='contained' 
+                                color="success" 
+                                startIcon={<Add />}
+                                sx={{width: "50%"}}
+                                onClick={()=> setShowPopup(true)}
+                            >
+                                {language ? 'הוסף קבצים' : 'Add Files'}
+                            </Button>
+                            <FormControlLabel 
+                                control={<Checkbox 
+                                            color='success' 
+                                            onChange={e=> setPack(prev=> ({...prev, isPublic: e.target.checked}))} 
+                                        />}
+                                label={language ? 'מארז ציבורי?' : 'Public pack?'}
+                            />
+                        </ButtonsWrapper>
                         {pack.packItems.length > 0 ?
-                            <></> 
+                            <SelectFilesList 
+                                files={pack.packItems}
+                            />
                         :
                             <Paragraph marginTop="40%" fontSize="2.5vmax">
                                 לא נוספו קבצים
@@ -111,10 +150,14 @@ export default function PackManagment(){
                         color='success'
                         disabled={!isFilled}
                         sx={{width: "90%"}}
+                        onClick={()=>createPack()}
                         startIcon={<Upload />}
                     >
-                        {language ? 'צור מארז' : "Create Pack"}
+                       {isLoading ? <CircularProgress size={"3.5vmax"} sx={{color: 'white'}} /> : getTitle()}
                     </Button>
+                    {showError && 
+                        <ErrorLabel>{language ? 'קרתה תקלה ביצירת המארז, נסו שנית מאוחר יותר' 
+                            : 'Something went wrong, try again later' }</ErrorLabel>}
                 </FormWrapper>
             </Card>
         :
@@ -128,7 +171,11 @@ export default function PackManagment(){
         {
             showPopup && 
             <PopupBase height={'80%'} width="90%" setShown={setShowPopup}>
-                <SelectFilesPopup setPack={setPack} />
+                <SelectFilesPopup 
+                    setPack={setPack} 
+                    setShowPopup={setShowPopup} 
+                    pack={pack}
+                />
             </PopupBase>
         }
         </PageWrapper>
