@@ -9,11 +9,15 @@ import {Card} from '../../components/globalStyles/styles';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import FileList from '../../components/FileList/FileList';
+import PopupBase from '../../components/PopupBase/PopupBase';
+import UploadFilePopup from '../../components/UploadFilePopup/UploadFilePopup';
 
 export default function Files(){
     const {user, getUser, language} = useMainContext();
     const [value, setValue] = useState('1');
-    const [fetching, setFecthing] = useState(true)
+    const [showPopup, setShown] = useState(false);
+    const [fetching, setFecthing] = useState(true);
+    const [files, setFiles] = useState([]);
     const Navigate = useNavigate()
 
     useEffect(()=>{
@@ -50,12 +54,13 @@ export default function Files(){
                         </TabList>
                         </Box>
                         <TabPanel value="1">
-                            <FileList />
+                            <FileList files={files} setFiles={setFiles} />
                             <IconButton
                                 size="large"
                                 edge="start"
                                 color="success"
                                 aria-label="addFile"
+                                onClick={()=>setShown(true)}
                                 sx={{
                                     position: 'fixed',
                                  ...(!language) && {"right": '5%'},
@@ -66,7 +71,8 @@ export default function Files(){
                             </IconButton>
                         </TabPanel>
                         <TabPanel value="2">Item Two</TabPanel>
-                    </TabContext>: 
+                    </TabContext>
+                    : 
                         <FetchingWrapper>
                             <CircularProgress 
                             color='success'
@@ -75,6 +81,11 @@ export default function Files(){
                         </FetchingWrapper>
                     }
             </Card>
+            {showPopup && 
+                <PopupBase height={'52%'} width="90%" setShown={setShown}>
+                    <UploadFilePopup setIsShown={setShown} setFileList={setFiles} />
+                </PopupBase>
+            }
         </PageWrapper>
     )
 }

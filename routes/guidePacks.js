@@ -48,7 +48,7 @@ router.get('/download', (req,res)=>{
 
                     res.writeHead(200, {
                         'Content-Type': doc.mimeType,
-                        'Content-disposition': 'attachment;filename=' + doc.fileName,
+                        'Content-disposition': 'attachment;filename=file',
                         'Content-Length': file.ContentLength
                     });
                     res.end(file.Body);

@@ -3,9 +3,8 @@ import {List, ListItem, CircularProgress, Divider} from '@mui/material';
 import FilesNetwork from '../../network/FilesNetwork';
 import FileMene from './Menu/Menu';
 
-export default function FileList ({type}){
+export default function FileList ({type, files, setFiles}){
     const [fetching,setFecthing] = useState(true);
-    const [files, setFiles] = useState([]);
 
     useEffect(()=>{
        getUserFiles().then(res=>{

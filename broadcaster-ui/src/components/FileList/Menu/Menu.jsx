@@ -36,9 +36,7 @@ export default function FileMenu({file, setFiles}){
     FilesNetwork.delete(file.uid).then(status =>{
         if(status){
             setFiles(prev=>{
-                const index = prev.findIndex(currFile => currFile.uid === file.uid );
-                prev.splice(index, 1);
-                return prev;
+                return prev.filter(currFile => currFile.uid !== file.uid );;
             });
         }
     }).catch(err=>{

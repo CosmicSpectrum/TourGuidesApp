@@ -37,4 +37,16 @@ export default class FilesNetwork {
             throw err;
         })
     }
+
+    static upload(fileInfo){
+        return axios.post(this.#baseUrl + '/upload', fileInfo, 
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(res=>{
+            if(res.data.status){
+                return res.data.fileKey;
+            }
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
 }

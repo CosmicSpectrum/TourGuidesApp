@@ -20,6 +20,11 @@ export const Label = styled.p(({marginTop})=>({
     marginTop
 }))
 
+export const ErrorLabel = styled.label(({marginTop})=>({
+    color: "red", 
+    marginTop
+}))
+
 export const Paragraph = styled.p(({fontSize,textAlign,textColor, marginTop, marginRight,direction, marginLeft})=>({
     fontSize,
     color: !textColor ? '#2e7d32' : textColor,

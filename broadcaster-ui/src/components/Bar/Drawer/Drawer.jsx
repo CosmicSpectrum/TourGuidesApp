@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import Drawer from '@mui/material/Drawer';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -19,6 +19,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { Divider } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+
+
+
 export default function AppDrawer(){
     const {language, user, setLanguage} = useMainContext();
     const [anchor, setAnchor] = useState(language ? "left": "right");
@@ -28,21 +31,16 @@ export default function AppDrawer(){
         bottom: false,
         right: false,
     });
-    const Location = useLocation();
     const Navigate = useNavigate();
-    const LIST_TITLES_HE = [
-    ...(user ?? (Location.pathname === '/createRoom')) ? ['העלאת עזרים'] : 
-        Cookie.get('auth-token') ? ['יצירת חדר'] : [],
-    ...(user) ? ['חבילות עזרי הדרכה'] : [],
-    'English'];
-    const LIST_TITLES_EN = [
-        ...(user  ?? (Location.pathname === '/createRoom')) ? ['Upload Guide Helpers'] :  Cookie.get('auth-token') ? 
-        ["Create Room"] : [],
-         ...(user) ?['Guide Packs'] : [],
-          'עברית'];
-    const ROUTE_REDIRECT = [...(Location.pathname === "/createRoom") 
-    ? ['/files'] : ['/createRoom']];
 
+    const LOGED_IN_TITLES_HE = [
+    ...(window.location.pathname === '/createRoom') ? ['העלאת עזרים'] : ['יצירת חדר'],
+    ['חבילות עזרי הדרכה'],
+    'English'];
+    const LOGED_IN_TITLES_EN = [
+        ...(window.location.pathname === '/createRoom') ? ['Upload Guide Helpers'] : ["Create Room"],
+        ['Guide Packs'],
+          'עברית'];
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
           return;
@@ -58,7 +56,7 @@ export default function AppDrawer(){
 
                     return <LanguageIcon />
                 }
-                return Location.pathname === "/createRoom" ? <FileUploadIcon /> : <AddIcon />
+                return window.location.pathname === "/createRoom" ? <FileUploadIcon /> : <AddIcon />
             case 1: 
                 return <Inventory2Icon />
             default:
@@ -67,7 +65,11 @@ export default function AppDrawer(){
     }
 
     const getTitles = ()=>{
-        return language ? LIST_TITLES_HE : LIST_TITLES_EN;
+        if(user){
+          return language ? LOGED_IN_TITLES_HE : LOGED_IN_TITLES_EN;
+        }else{
+          return language ? ['English'] : ['עברית']
+        }
     }
 
       const list = (anchor)=>{
@@ -92,7 +94,7 @@ export default function AppDrawer(){
                             Cookie.set("language", !language, {expires: 99999}); 
                             setLanguage(!language); 
                         }else{
-                          Navigate(ROUTE_REDIRECT[index]);
+                          Navigate(window.location.pathname === '/createRoom' ? "/files"  : "/createRoom");
                         }}}>
                 <ListItemButton>
                   <ListItemIcon>
