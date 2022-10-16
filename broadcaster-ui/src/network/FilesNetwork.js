@@ -13,6 +13,16 @@ export default class FilesNetwork {
             throw err;
         })
     }
+
+    static getPublicFiles(){
+        return axios.get(this.#baseUrl + '/getPublicFiles',
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(files=>{
+            return files.data && files.data.files;
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
     
     static download(fileKey){
         return axios.get(this.#baseUrl + `/download?fileKey=${fileKey}`,

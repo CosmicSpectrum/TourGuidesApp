@@ -6,7 +6,6 @@ import { IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import FilesNetwork from '../../../network/FilesNetwork';
 import SaveAs from 'file-saver';
 
@@ -79,12 +78,6 @@ export default function FileMenu({file, setFiles}){
                         <>
                             <DeleteIcon />
                             {language ? "מחק קובץ" : 'Delete File'}
-                        </>
-                    </MenuItem>,
-                    <MenuItem onClick={handleClose}>
-                        <>
-                            <EditIcon />
-                            {language ? "ערוך קובץ" : 'Edit File'}
                         </>
                     </MenuItem>
                 ].map(item => {

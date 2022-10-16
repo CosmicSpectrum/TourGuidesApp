@@ -7,9 +7,15 @@ export default function FileList ({type, files, setFiles}){
     const [fetching,setFecthing] = useState(true);
 
     useEffect(()=>{
-       getUserFiles().then(res=>{
-            setFecthing(false);
-       })
+        if(type){
+            getUserFiles().then(res=>{
+                 setFecthing(false);
+            })
+        }else{
+            getPublicFiles().then(res=>{
+                setFecthing(false);
+            })
+        }
     },[])
 
     const getUserFiles = async ()=>{
@@ -17,6 +23,16 @@ export default function FileList ({type, files, setFiles}){
             if(files){
                 setFiles(files);
         }
+        }).catch(err=>{
+            console.error(err);
+        })
+    }
+
+    const getPublicFiles = async ()=>{
+        return FilesNetwork.getPublicFiles().then(files=>{
+            if(files){
+                setFiles(files);
+            }
         }).catch(err=>{
             console.error(err);
         })

@@ -97,6 +97,20 @@ router.get('/getUserFiles', (req,res)=>{
     }
 })
 
+router.get("/getPublicFiles", (req,res)=>{
+    try{
+        FileMetadata.find({isPublic: true},
+            ["uid","mimeType","isPublic","fileName","fileOwner"], (err, docs)=>{
+                if(err) throw new Error(err);
+
+                return res.status(200).json({files: docs});
+            } )
+    }catch(err){
+        console.error(err);
+        return res.status(500).send('something went wrong');
+    }
+})
+
 router.get('/searchFile', (req,res)=>{
     const {searchQuery} = req.query;
     try{

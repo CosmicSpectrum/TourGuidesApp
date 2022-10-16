@@ -54,7 +54,7 @@ export default function Files(){
                         </TabList>
                         </Box>
                         <TabPanel value="1">
-                            <FileList files={files} setFiles={setFiles} />
+                            <FileList files={files} setFiles={setFiles} type={true} />
                             <IconButton
                                 size="large"
                                 edge="start"
@@ -70,7 +70,9 @@ export default function Files(){
                                 <AddCircleIcon sx={{fontSize: "2.5rem"}} />
                             </IconButton>
                         </TabPanel>
-                        <TabPanel value="2">Item Two</TabPanel>
+                        <TabPanel value="2">
+                            <FileList files={files} setFiles={setFiles} />
+                        </TabPanel>
                     </TabContext>
                     : 
                         <FetchingWrapper>
