@@ -1,40 +1,37 @@
 import React,{useState, useEffect} from 'react';
 import {List, ListItem, CircularProgress, Divider} from '@mui/material';
 import FilesNetwork from '../../network/FilesNetwork';
-import FileMene from './Menu/Menu';
-import getFileType from '../../utils/getFileType';
-import { useMainContext } from '../../context/appContext';
+import PackMenu from './Menu/PackMenu';
 
-export default function FileList ({type, files, setFiles}){
+export default function PackList ({type, packs, setPacks}){
     const [fetching,setFecthing] = useState(true);
-    const {language} = useMainContext();
 
     useEffect(()=>{
         if(type){
-            getUserFiles().then(res=>{
+            getUserPacks().then(res=>{
                  setFecthing(false);
             })
         }else{
-            getPublicFiles().then(res=>{
+            getPublicPacks().then(res=>{
                 setFecthing(false);
             })
         }
     },[])
 
-    const getUserFiles = async ()=>{
-        return FilesNetwork.getUserFiles().then(files=>{
-            if(files){
-                setFiles(files);
+    const getUserPacks = async ()=>{
+        return FilesNetwork.getUserPacks().then(packs=>{
+            if(packs){
+                setPacks(packs);
         }
         }).catch(err=>{
             console.error(err);
         })
     }
 
-    const getPublicFiles = async ()=>{
-        return FilesNetwork.getPublicFiles().then(files=>{
-            if(files){
-                setFiles(files);
+    const getPublicPacks = async ()=>{
+        return FilesNetwork.getPublicPacks().then(packs=>{
+            if(packs){
+                setPacks(packs);
             }
         }).catch(err=>{
             console.error(err);
@@ -46,12 +43,11 @@ export default function FileList ({type, files, setFiles}){
         {!fetching ?            
             <div style={{height: "60vh"}}>
                 <List sx={{maxHeight: "100%", overflowY: 'auto'}}>
-                    {files.map((file, index)=>(
+                    {packs.map((pack, index)=>(
                         <>
                             <ListItem sx={{justifyContent: "space-between"}} id={index}>
-                                <div style={{width: '33%'}}>{file.fileName}</div>
-                                <div>{getFileType(file.mimeType, language)}</div>
-                                <FileMene setFiles={setFiles} file={file} />
+                                {pack.packName}
+                                <PackMenu setPacks={setPacks} pack={pack} />
                             </ListItem>
                             <Divider />
                         </>

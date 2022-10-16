@@ -6,6 +6,7 @@ const FileUpload = require('express-fileupload');
 const FileMetadata = require('../models/filtesMetadata');
 const Users = require('../models/users');
 const GuidePack = require('../models/guidePack');
+const mongoose = require('mongoose')
 
 const S3 = new s3Manager(process.env.AWS_ACCESS_KEY,process.env.AWS_SECRET_KEY,process.env.PROJECT_BUCKET);
 
@@ -127,30 +128,28 @@ router.get('/searchFile', (req,res)=>{
     }
 })
 
-router.post('/createPack', (req,res)=>{
-    const {packName, packItems} = req.body;
+router.post('/createPack',async  (req,res)=>{
+    const {packName, packItems, isPublic} = req.body;
     try{
         const pack = new GuidePack({
             packName,
-            packItems
+            packItems,
+            isPublic,
+            packOwner: req.user._id
         })
 
-        pack.save(async err=>{
-            if(err) throw new Error(err);
+        await pack.save();
 
-            const user = await Users.findOne({_id: req.user._id});
+        const user = await Users.findOne({_id: req.user._id});
 
-            if(user){
-                user.guidePacks.push(pack._id);
-                Users.replaceOne({_id: user._id}, user).then((err,result)=>{
-                    if(err) throw err;
+        if(user){
+            user.guidePacks.push(pack._id);
+            Users.replaceOne({_id: user._id}, user, (err, result)=>{
+                if(err) throw err;
 
-                    return res.status(200).json({status: true});
-                }).catch(err=>{
-                    throw err;
-                });
-            }
-        })
+                return res.status(200).json({status: true});
+            })
+        }
     }catch(err){
         console.log(err);
         return res.status(500).send("something went wrong");
@@ -165,17 +164,30 @@ router.get('/getUserPacks', async (req,res)=>{
     }catch(err){
         return res.status(500).send('something went wrong');
     }
+});
+
+router.get("/getPublicPacks", (req,res)=>{
+    try{
+        GuidePack.find({isPublic: true}, (err, docs)=>{
+            if(err) throw new Error(err);
+
+            return res.status(200).json(docs);
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).send('something went wrong');
+    }
 })
 
 router.delete('/deletePack', (req,res)=>{
-    const {packId} = req.body;
+    const {packId} = req.query;
     try{
         Users.findOne({_id: req.user._id}, (err, user)=>{
             const indexToRemove = user.guidePacks.findIndex(pack => packId === pack);
             user.guidePacks.splice(indexToRemove, 1);
             user.save(err=>{
                 if(err) throw err;
-                GuidePack.deleteOne({_id: packId}, (err)=>{
+                GuidePack.deleteOne({_id: mongoose.Types.ObjectId(packId)}, (err)=>{
                     if(err) throw err;
 
                     return res.status(200).json({status: true});

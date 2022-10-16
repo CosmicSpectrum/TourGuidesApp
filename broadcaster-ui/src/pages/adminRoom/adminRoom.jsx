@@ -23,7 +23,7 @@ export default function AdminRoom(){
         } else if(!Cookie.get("auth-token")){
             Navigate('/');
         }
-    },[user]);
+    },[user,Navigate,getUser]);
 
     useEffect(()=>{
         if(!sessionStorage.getItem('firstLoad')){

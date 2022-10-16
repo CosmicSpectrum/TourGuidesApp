@@ -76,7 +76,7 @@ export default function UploadFilePopup({setFileList, setIsShown}){
             />
             <ButtonWrapper>
                 <Button variant="outlined" color='success' component="label" startIcon={<FileUploadIcon />}>
-                    <input hidden type='file' onChange={(e=>{
+                    <input hidden type='file' accept="audio/*, video/*, image/*, .pdf" onChange={(e=>{
                         if(e.target.files.length > 0){
                             setFileInfo(prev=>{
                                 return {...prev, file: e.target.files[0]}

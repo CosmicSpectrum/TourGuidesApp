@@ -16,6 +16,8 @@ import Cookie from 'js-cookie';
 import Room from './pages/UserRoom/Room';
 import {useMainContext} from './context/appContext';
 import Files from './pages/Files/Files';
+import Packs from './pages/Packs/PackList/Packs';
+import PackManagment from './pages/Packs/CreatePack/PackManagment';
 
 const theme = createTheme({
   direction: 'rtl'
@@ -61,6 +63,8 @@ function App() {
             <Route path='/room-admin/:roomId' element={<AdminRoom />} />
             <Route path="/room/:roomId" element={<Room />} />
             <Route path="/files" element={<Files />} />
+            <Route path="/packs" element={<Packs />} />
+            <Route path="/packManagment" element={<PackManagment />} />
             <Route path='/' element={!Cookie.get('auth-token') ? <Navigate to="/login" replace /> : <Navigate to="/createRoom" replace />} />
           </Routes>
         </ThemeProvider>

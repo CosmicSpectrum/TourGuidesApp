@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState} from 'react'
 import Drawer from '@mui/material/Drawer';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -17,7 +17,7 @@ import imageSrc from '../../../media/greenLogo.png';
 import Cookie from 'js-cookie'
 import AddIcon from '@mui/icons-material/Add';
 import { Divider } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -34,12 +34,12 @@ export default function AppDrawer(){
     const Navigate = useNavigate();
 
     const LOGED_IN_TITLES_HE = [
-    ...(window.location.pathname === '/createRoom') ? ['העלאת עזרים'] : ['יצירת חדר'],
-    ['חבילות עזרי הדרכה'],
+    ...(window.location.pathname !== '/files') ? ['העלאת עזרים'] : ['יצירת חדר'],
+    ...(window.location.pathname !== '/packs') ? ['מארזי עזרי הדרכה'] : ['יצירת חדר'],
     'English'];
     const LOGED_IN_TITLES_EN = [
-        ...(window.location.pathname === '/createRoom') ? ['Upload Guide Helpers'] : ["Create Room"],
-        ['Guide Packs'],
+        ...(window.location.pathname !== '/files') ? ['Upload Guide Helpers'] : ["Create Room"],
+        ...(window.location.pathname !== '/packs') ? ['Guide Packs'] : ['Create Room'],
           'עברית'];
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -56,12 +56,35 @@ export default function AppDrawer(){
 
                     return <LanguageIcon />
                 }
-                return window.location.pathname === "/createRoom" ? <FileUploadIcon /> : <AddIcon />
+                return window.location.pathname === "/files" ? <AddIcon /> : <FileUploadIcon />
             case 1: 
-                return <Inventory2Icon />
+                return window.location.pathname === '/packs' ? <AddIcon /> : <Inventory2Icon />
             default:
                 return <LanguageIcon />
         }
+    }
+
+    const navigation = (text)=>{
+      if(window.onbeforeunload){
+        window.onbeforeunload = null;
+      }
+
+      switch(text){
+        case 'יצירת חדר':
+          return '/createRoom';
+        case 'Create Room':
+          return '/createRoom';
+        case 'העלאת עזרים':
+          return '/files';
+        case 'Upload Guide Helpers':
+          return '/files';
+        case 'מארזי עזרי הדרכה':
+          return '/packs';
+        case 'Guide Packs':
+          return '/packs'
+        default:
+          break;
+      }
     }
 
     const getTitles = ()=>{
@@ -94,7 +117,7 @@ export default function AppDrawer(){
                             Cookie.set("language", !language, {expires: 99999}); 
                             setLanguage(!language); 
                         }else{
-                          Navigate(window.location.pathname === '/createRoom' ? "/files"  : "/createRoom");
+                          Navigate(navigation(text));
                         }}}>
                 <ListItemButton>
                   <ListItemIcon>

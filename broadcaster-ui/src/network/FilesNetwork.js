@@ -24,6 +24,39 @@ export default class FilesNetwork {
         })
     }
     
+    static getUserPacks(){
+        return axios.get(this.#baseUrl + '/getUserPacks',
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(packs=>{
+            return packs.data && packs.data;
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
+
+    static getPublicPacks(){
+        return axios.get(this.#baseUrl + '/getPublicPacks',
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(packs=>{
+            return packs.data && packs.data;
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
+
+    static deletePack(packId){
+        return axios.delete(this.#baseUrl + `/deletePack?packId=${packId}`,
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(result=>{
+            if(result.data.status){
+                return true;
+            }else{
+                return false;
+            }
+        }).catch(err=>{
+            return false;
+        })
+    }
+    
     static download(fileKey){
         return axios.get(this.#baseUrl + `/download?fileKey=${fileKey}`,
         {headers: {'x-auth-token': Cookie.get('auth-token')},
