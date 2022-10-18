@@ -1,16 +1,16 @@
 import React,{useEffect, useRef,useState} from 'react';
-import {Card, Title, Paragraph} from '../../components/globalStyles/styles';
+import {Card, Title, Paragraph, inputDesign} from '../../components/globalStyles/styles';
 import {PageWrapper, InputWrapper, ButtonWrapper, FetchingWrapper} from './styles'
 import { useMainContext } from "../../context/appContext";
 import Cookie from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { TextField, CircularProgress } from '@mui/material';
+import { TextField, CircularProgress, Autocomplete } from '@mui/material';
 import ButtonComponent from '../../components/Button/ButtonComponent';
 import RoomNetwork from '../../network/roomNetwork';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import FormControl from '@mui/material/FormControl';
-import NativeSelect from '@mui/material/NativeSelect';
+import FilesNetwork from '../../network/FilesNetwork';
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -21,6 +21,8 @@ export default function CreateRoom(){
     const [fetching, setFecthing] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [options, setOptions] = useState([]);
+    const [packId, setPackId] = useState(null);
     const {user,getUser, setRoom, language} = useMainContext();
     const Navigate = useNavigate();
     const descriptionRef = useRef();
@@ -33,13 +35,21 @@ export default function CreateRoom(){
         }else if(user){
             setFecthing(false);
         }
-    },[user])
+    },[user, Navigate,getUser])
 
     useEffect(()=>{
         RoomNetwork.getRoomByCreator().then(room=>{
             if(room){
                 Navigate(`/room-admin/${room.roomCode}`);
             }
+        });
+
+        FilesNetwork.getAutocomplateList().then(packs=>{
+            if(packs){
+                setOptions(packs);
+            }
+        }).catch(err=>{
+            console.error(err);
         })
     }, [])
 
@@ -50,7 +60,7 @@ export default function CreateRoom(){
     const createRoom = ()=>{
         setIsLoading(true);
         const tourDescription = descriptionRef.current.value;
-        RoomNetwork.createRoom(tourDescription).then(room=>{
+        RoomNetwork.createRoom(tourDescription, packId).then(room=>{
             if(room){
                 setRoom(room);
                 Navigate(`/room-admin/${room.roomCode}`)
@@ -84,8 +94,19 @@ export default function CreateRoom(){
                         <Paragraph marginRight={language ? "1.5%" : undefined} marginLeft={!language ? "1.5%" : undefined}>
                            {language ? "בחר חבילת עזרים: (אופציונלי)" : "Pick guide pack: (Optional)"}
                         </Paragraph>
-                        <NativeSelect color='success'>
-                        </NativeSelect>
+                        <Autocomplete 
+                            renderInput={(params)=> <TextField 
+                                                        {...params} 
+                                                        sx={{inputDesign}} 
+                                                        variant={'standard'}
+                                                        color='success'
+                                                    />}
+                            options={options}
+                            color='success'
+                            onChange={(e,value)=> {setPackId(value.id)}}
+                            noOptionsText={language ? 'לא נמצאו אפשרויות' : 'No Options Found'}
+                            clearIcon={false}
+                        />
                     </FormControl>
                     <Paragraph marginRight={language ? "4%" : undefined} marginLeft={!language ? "4%" : undefined} marginTop="1%">
                        {language ? "לאן מטיילים היום?" : "Where are we heading today?"}

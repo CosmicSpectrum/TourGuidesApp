@@ -64,6 +64,16 @@ export default class FilesNetwork {
         })
     }
 
+    static getAutocomplateList(){
+        return axios.get(this.#baseUrl + '/getAutocompleteList',
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(packs=>{
+            return packs.data && packs.data;
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
+
     static deletePack(packId){
         return axios.delete(this.#baseUrl + `/deletePack?packId=${packId}`,
         {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(result=>{

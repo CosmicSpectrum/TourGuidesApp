@@ -4,9 +4,9 @@ import Cookie from 'js-cookie'
 export default class RoomNetwork{
     static #baseUrl = 'http://localhost:3001/rooms';
 
-    static createRoom(tourDescription){
+    static createRoom(tourDescription, guidePack){
         return axios.post(`${this.#baseUrl}/createRoom`, 
-            {tourDescription}, 
+            {tourDescription, guidePack}, 
             {headers: {"x-auth-token": Cookie.get("auth-token")}}).then(res=>{
                 if(res.data.status){
                     return res.data.room;

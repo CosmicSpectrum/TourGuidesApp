@@ -3,10 +3,11 @@ const authenticateMiddleware = require('../middlewares/auth');
 const Rooms = require('../models/rooms');
 const codeGenerator = require('../libs/codeGenerator');
 const router = express.Router();
+const {Types} = require('mongoose')
 
 router.post('/createRoom',authenticateMiddleware ,(req,res)=>{
     try{
-        const {tourDescription} = req.body;
+        const {tourDescription, guidePack} = req.body;
         const {fullname, _id} = req.user;
         const roomCode = codeGenerator(4);
 
@@ -14,7 +15,8 @@ router.post('/createRoom',authenticateMiddleware ,(req,res)=>{
             roomCreator: _id,
             roomCode: roomCode,
             guideName: fullname,
-            ...(tourDescription) && {tourDescription: tourDescription}
+            ...(tourDescription) && {tourDescription: tourDescription},
+            ...(guidePack) && {guidePack: Types.ObjectId(guidePack)}
         })
         
         Room.save(err=>{

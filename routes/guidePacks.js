@@ -6,7 +6,7 @@ const FileUpload = require('express-fileupload');
 const FileMetadata = require('../models/filtesMetadata');
 const Users = require('../models/users');
 const GuidePack = require('../models/guidePack');
-const mongoose = require('mongoose')
+const {Types} = require('mongoose')
 
 const S3 = new s3Manager(process.env.AWS_ACCESS_KEY,process.env.AWS_SECRET_KEY,process.env.PROJECT_BUCKET);
 
@@ -115,13 +115,33 @@ router.get("/getPublicFiles", (req,res)=>{
 router.get('/getPackById', (req,res)=>{
     const {packId} = req.query;
     try{
-        GuidePack.findOne({_id: mongoose.Types.ObjectId(packId)}, (err, pack)=>{
+        GuidePack.findOne({_id: Types.ObjectId(packId)}, (err, pack)=>{
             if(err) throw err;
 
             return res.status(200).json(pack);
         })
     }catch(err){
-        return res.status(500).json('something went wrong');
+        return res.status(500).send('something went wrong');
+    }
+})
+
+router.get('/getAutocompleteList', (req,res)=>{
+    try{
+        const packsArray = [];
+        GuidePack.find(
+            {$or: [{_id: {$in: req.user.guidePacks}}, {isPublic: true}]},
+            ['_id', 'packName'],
+            (err, packs)=>{
+                if(err) throw err;
+
+                packs.map(pack=>{
+                    packsArray.push({id: pack._id, label: pack.packName});
+                })
+
+                return res.status(200).json(packsArray)
+            })
+    }catch(err){
+        return res.status(500).send('something went wrong');
     }
 })
 
@@ -195,7 +215,7 @@ router.delete('/deletePack', (req,res)=>{
             user.guidePacks.splice(indexToRemove, 1);
             user.save(err=>{
                 if(err) throw err;
-                GuidePack.deleteOne({_id: mongoose.Types.ObjectId(packId)}, (err)=>{
+                GuidePack.deleteOne({_id: Types.ObjectId(packId)}, (err)=>{
                     if(err) throw err;
 
                     return res.status(200).json({status: true});
