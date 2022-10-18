@@ -34,6 +34,26 @@ export default class FilesNetwork {
         })
     }
 
+    static getPackById(packId){
+        return axios.get(this.#baseUrl + `/getPackById?packId=${packId}`,
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(pack=>{
+            return pack.data && pack.data;
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
+
+    static updatePack(pack){
+        return axios.put(this.#baseUrl + '/updatePack', pack,
+        {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(res=>{
+            return res.data.status;
+        }).catch(err=>{
+            console.error(err);
+            throw err;
+        })
+    }
+
     static getPublicPacks(){
         return axios.get(this.#baseUrl + '/getPublicPacks',
         {headers: {'x-auth-token': Cookie.get('auth-token')}}).then(packs=>{

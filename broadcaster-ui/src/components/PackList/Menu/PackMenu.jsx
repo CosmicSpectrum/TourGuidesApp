@@ -8,11 +8,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import FilesNetwork from '../../../network/FilesNetwork';
+import { useNavigate } from 'react-router-dom';
 
 export default function PackMenu({pack, setPacks}){
   const [anchorEl, setAnchorEl] = useState(null);
   const {user, language} = useMainContext();
   const open = Boolean(anchorEl);
+  const Navigation = useNavigate();
   
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -55,7 +57,7 @@ export default function PackMenu({pack, setPacks}){
             'aria-labelledby': 'file-menu',
             }}
         >
-            <MenuItem onClick={()=>{handleClose();}}>
+            <MenuItem onClick={()=>{handleClose(); Navigation(`/packManagment?disabled=true&packid=${pack._id}`)}}>
                 {
                 <>
                     <VisibilityIcon /> 
@@ -66,7 +68,7 @@ export default function PackMenu({pack, setPacks}){
             {
                 user?._id === pack.packOwner &&
                 [
-                    <MenuItem onClick={()=>{handleClose();}}>
+                    <MenuItem onClick={()=>{handleClose(); Navigation(`/packManagment?edit=true&packid=${pack._id}`)}}>
                         <>
                             <EditIcon />
                             {language ? "ערוך מארז" : 'Edit Pack'}

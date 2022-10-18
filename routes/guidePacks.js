@@ -112,19 +112,16 @@ router.get("/getPublicFiles", (req,res)=>{
     }
 })
 
-router.get('/searchFile', (req,res)=>{
-    const {searchQuery} = req.query;
+router.get('/getPackById', (req,res)=>{
+    const {packId} = req.query;
     try{
-        FileMetadata.find({$text: {$search: searchQuery}, isPublic: true},  
-            { score : { $meta: "textScore" } },
-            (err,docs)=>{
-                if(err) throw new Error(err);
+        GuidePack.findOne({_id: mongoose.Types.ObjectId(packId)}, (err, pack)=>{
+            if(err) throw err;
 
-                return res.status(200).json({foundItems: docs});
-            })
+            return res.status(200).json(pack);
+        })
     }catch(err){
-        console.log(err);
-        return res.status(500).send('something went wront');
+        return res.status(500).json('something went wrong');
     }
 })
 
@@ -153,6 +150,17 @@ router.post('/createPack',async  (req,res)=>{
     }catch(err){
         console.log(err);
         return res.status(500).send("something went wrong");
+    }
+})
+
+router.put('/updatePack', async (req,res)=>{
+    const pack = req.body;
+    try{
+        await GuidePack.replaceOne({_id: pack._id}, pack);
+        return res.status(200).json({status: true});
+    }catch(err){
+        console.log(err);
+        return res.status(500).send('something went wrong');
     }
 })
 

@@ -44,6 +44,8 @@ export default function PackManagment(){
     const [showPopup, setShowPopup] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [isDisabled] = useState(params.current.get('disabled') ? true : false);
+    const [isEdit, setIsEdit] = useState(params.current.get('edit') ? true : false);
     const [pack, setPack] = useState({
         packName: null,
         packItems: [],
@@ -70,6 +72,17 @@ export default function PackManagment(){
         }
     },[setIsFilled, pack])
 
+    useEffect(()=>{
+        setFecthing(true);
+        if(isDisabled || isEdit){
+            getPack().then(res=>{
+                setFecthing(false);
+            })
+        }else{
+            setFecthing(false)
+        }
+    },[isDisabled, isEdit])
+
     const getTitle = ()=>{
         if(params.current.get('edit')){
             return language ? 'ערוך מארז' : 'Edit Pack';
@@ -92,7 +105,27 @@ export default function PackManagment(){
         }).catch(err=>{
             console.error(err);
         })
+    }
 
+    const updatePack = ()=>{
+        setIsLoading(true);
+        FilesNetwork.updatePack(pack).then(res=>{
+            if(res){
+                Navigate('/packs')
+            }
+        }).catch(err=>{
+            console.error(err);
+            setIsLoading(false);
+            setShowError(true);
+        })
+    }
+
+    const getPack = async ()=>{
+        FilesNetwork.getPackById(params.current.get('packid')).then(currPack=>{
+            if(currPack){
+                setPack(currPack);
+            }
+        });
     }
 
     return (
@@ -111,10 +144,15 @@ export default function PackManagment(){
                                 return {...prev, packName: e.target.value}
                             })
                         }}
+                        {...(isDisabled || isEdit) && {focused: true}}
+                        value={pack.packName}
                         autoComplete={'off'}
                         variant="standard"
-                        label={language ? 'הכנס שם מארז' : 'Insert pack name'}
+                        label={language ? 'שם מארז' : 'Pack name'}
                         color='success'
+                        inputProps={
+                            { readOnly: isDisabled }
+                        }
                     />
                     <ListWrapper>
                         <ButtonsWrapper>
@@ -124,13 +162,16 @@ export default function PackManagment(){
                                 startIcon={<Add />}
                                 sx={{width: "50%"}}
                                 onClick={()=> setShowPopup(true)}
+                                disabled={isDisabled}
                             >
                                 {language ? 'הוסף קבצים' : 'Add Files'}
                             </Button>
                             <FormControlLabel 
                                 control={<Checkbox 
                                             color='success' 
-                                            onChange={e=> setPack(prev=> ({...prev, isPublic: e.target.checked}))} 
+                                            onChange={e=> setPack(prev=> ({...prev, isPublic: e.target.checked}))}
+                                            checked={pack.isPublic && 'checked' }
+                                            disabled={isDisabled}
                                         />}
                                 label={language ? 'מארז ציבורי?' : 'Public pack?'}
                             />
@@ -145,18 +186,18 @@ export default function PackManagment(){
                             </Paragraph>
                         }
                     </ListWrapper>
-                    <Button
+                   {!isDisabled && <Button
                         variant='contained'
                         color='success'
                         disabled={!isFilled}
                         sx={{width: "90%"}}
-                        onClick={()=>createPack()}
+                        onClick={()=>{isEdit ? updatePack() : createPack()}}
                         startIcon={<Upload />}
                     >
                        {isLoading ? <CircularProgress size={"3.5vmax"} sx={{color: 'white'}} /> : getTitle()}
-                    </Button>
+                    </Button>}
                     {showError && 
-                        <ErrorLabel>{language ? 'קרתה תקלה ביצירת המארז, נסו שנית מאוחר יותר' 
+                        <ErrorLabel>{language ? `קרתה תקלה ${isEdit ? 'בעריכת': 'ביצירת'} המארז, נסו שנית מאוחר יותר`
                             : 'Something went wrong, try again later' }</ErrorLabel>}
                 </FormWrapper>
             </Card>
