@@ -7,11 +7,12 @@ export const Title = styled.p(({fontSize,marginBottom})=>({
     marginBottom
 }))
 
-export const Card = styled.div(({width, height})=>({
-    width,
-    height,
+export const Card = styled.div(({width,minHeight})=>({
+    height: "fit-content",
+    minHeight: minHeight ? minHeight : "87vh",
     boxShadow: "1px 2px 14px 4px rgba(0,0,0,0.30)",
-    borderRadius: '1rem'
+    borderRadius: '1rem',
+    width
 }))
 
 export const Label = styled.p(({marginTop})=>({

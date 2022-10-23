@@ -17,7 +17,7 @@ export default function ResetPassword(){
     return (
     <>
         <CardWrapper>
-            <Card height="55vmax" width="95%">
+            <Card minHeight="55vmax" width="95%">
                 <FormWrapper marginTop={otpValidated ? "10%" : "18%"}>
                     {!otpValidated ? 
                         <ValidateOtp setValidateOtp={setOtpValidated} /> :

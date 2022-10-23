@@ -46,7 +46,7 @@ export default function InsertCode(){
 
     return(
         <CodeWrapper>
-            <Card height="37vmax" width={"95%"}>
+            <Card minHeight="37vmax" width={"95%"}>
                 <Title fontSize={"4vmax"}>
                    {language ? "כניסת מטיילים" : "Tourists Entrence"}
                 </Title>

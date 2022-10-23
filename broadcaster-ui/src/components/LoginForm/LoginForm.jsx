@@ -103,7 +103,7 @@ export default function LoginForm(){
 
     return (
         <LoginWrapper>
-            <Card height="45vmax" width="95%">
+            <Card minHeight="45vmax" width="95%">
             {toggleResetPassword ? <InputWrappers>
                     <Title fontSize={"4vmax"} marginBottom={'0'}>
                         {language ? "כניסת מורי דרך" : "Guides Login"}

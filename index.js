@@ -46,6 +46,10 @@ io.on('connection', (socket)=>{
         socket.leave(roomId);
     })
 
+    socket.on("showFile", (fileId, roomId)=>{
+        socket.broadcast.to(roomId).emit('getFile',fileId);
+    })
+
     socket.on('userLeave', (roomId, userId)=>{
         ListenersUtils.removeListener(userId,roomId).catch(err=>{
             console.log("remove user operation faild because: " + err.message);

@@ -25,11 +25,10 @@ export default function Room(){
     },[room])
 
     useEffect(()=>{
-        if(!sessionStorage.getItem('firstLoad')){
-            sessionStorage.setItem("firstLoad","hey");
+        if(!localStorage.getItem('firstLoad')){
+            localStorage.setItem("firstLoad","hey");
             window.location.reload(false);
         }else{
-            sessionStorage.clear();
             myPeer.on("open", userId=>{
                 setPeerId(userId);
                 socket.emit('join-room', roomId, userId)
@@ -46,6 +45,10 @@ export default function Room(){
 
             socket.on('room-closed',()=>{
                 roomEnded();
+            })
+
+            socket.on('getFile', fileId=>{
+              
             })
         }
     }, [])
@@ -77,6 +80,7 @@ export default function Room(){
         }).then((result)=>{
             if(result.isConfirmed){
                 socket.emit('userLeave', roomId, peerId);
+                localStorage.clear();
                 Navigate('/')
             }
         })
