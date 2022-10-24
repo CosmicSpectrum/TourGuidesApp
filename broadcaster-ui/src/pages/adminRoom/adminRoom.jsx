@@ -12,9 +12,7 @@ import Swal from 'sweetalert2';
 import { TextField, CircularProgress, Autocomplete } from '@mui/material';
 import FilesNetwork from "../../network/FilesNetwork";
 import getFileType from "../../utils/getFileType";
-import { Worker, Viewer } from '@react-pdf-viewer/core';
-import '@react-pdf-viewer/core/lib/styles/index.css';
-
+import {PDF, Img, Audio, Video} from '../../components/MediaElements/mediaElements'
 
 export default function AdminRoom(){
     const [Stream , setStream] = useState(null);
@@ -143,24 +141,21 @@ export default function AdminRoom(){
     const getFilePlatform = ()=>{
         switch(getFileType(fileBuffer.current?.type, language)){
             case 'תמונה':
-                return <img 
-                            style={{maxWidth: "300px", maxHeight: "400px", marginTop: "5%"}} 
-                            src={URL.createObjectURL(fileBuffer.current)} 
-                            alt='pic' 
-                        />
+                return <Img fileRef={fileBuffer} />
             case 'מסמך':
-                return (
-                    <div 
-                        style={{
-                            border: '1px solid rgba(0, 0, 0, 0.3)',
-                            height: '300px',
-                            width: '90%',
-                            marginTop:"5%"
-                            }}
-                    >
-                        <Viewer fileUrl={URL.createObjectURL(fileBuffer.current)} />
-                    </div>
-                )
+                return <PDF fileRef={fileBuffer} />
+            case 'שמע':
+                return <Audio roomId={roomId} isAdmin={true} fileRef={fileBuffer} />
+            case 'סרטון':
+                return <Video roomId={roomId} isAdmin={true} fileRef={fileBuffer} />
+            case 'Picture':
+                return <Img fileRef={fileBuffer} />
+            case 'Document':
+                return <PDF fileRef={fileBuffer} />
+            case 'Audio':
+                return <Audio roomId={roomId} isAdmin={true} fileRef={fileBuffer} />
+            case 'Video':
+                return <Video roomId={roomId} isAdmin={true} fileRef={fileBuffer} />
             default:
                 return;
         }

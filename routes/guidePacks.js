@@ -10,10 +10,9 @@ const {Types} = require('mongoose')
 
 const S3 = new s3Manager(process.env.AWS_ACCESS_KEY,process.env.AWS_SECRET_KEY,process.env.PROJECT_BUCKET);
 
-router.use(authenticationMiddleware);
 router.use(FileUpload());
 
-router.post('/upload',(req,res)=>{
+router.post('/upload',authenticationMiddleware, (req,res)=>{
     const {file} = req.files;
     const {fileName, isPublic, fileOwner} = req.body;
     try{
@@ -64,7 +63,7 @@ router.get('/download', (req,res)=>{
     }
 })
 
-router.delete('/delete',(req,res)=>{
+router.delete('/delete',authenticationMiddleware,(req,res)=>{
     const {fileKey} = req.query;
     try{
         S3.delete(fileKey).then(result=>{
@@ -84,7 +83,7 @@ router.delete('/delete',(req,res)=>{
     }
 })
 
-router.get('/getUserFiles', (req,res)=>{
+router.get('/getUserFiles',authenticationMiddleware, (req,res)=>{
     try{
         FileMetadata.find({fileOwner: req.user._id}, 
             ["uid","mimeType","isPublic","fileName","fileOwner"],(err, docs)=>{
@@ -98,7 +97,7 @@ router.get('/getUserFiles', (req,res)=>{
     }
 })
 
-router.get("/getPublicFiles", (req,res)=>{
+router.get("/getPublicFiles",authenticationMiddleware, (req,res)=>{
     try{
         FileMetadata.find({isPublic: true},
             ["uid","mimeType","isPublic","fileName","fileOwner"], (err, docs)=>{
@@ -112,7 +111,7 @@ router.get("/getPublicFiles", (req,res)=>{
     }
 })
 
-router.get('/getPackById', (req,res)=>{
+router.get('/getPackById',authenticationMiddleware, (req,res)=>{
     const {packId} = req.query;
     try{
         GuidePack.findOne({_id: Types.ObjectId(packId)}, (err, pack)=>{
@@ -125,7 +124,7 @@ router.get('/getPackById', (req,res)=>{
     }
 })
 
-router.get('/getAutocompleteList', (req,res)=>{
+router.get('/getAutocompleteList',authenticationMiddleware, (req,res)=>{
     try{
         const packsArray = [];
         GuidePack.find(
@@ -145,7 +144,7 @@ router.get('/getAutocompleteList', (req,res)=>{
     }
 })
 
-router.post('/createPack',async  (req,res)=>{
+router.post('/createPack',authenticationMiddleware,async  (req,res)=>{
     const {packName, packItems, isPublic} = req.body;
     try{
         const pack = new GuidePack({
@@ -173,7 +172,7 @@ router.post('/createPack',async  (req,res)=>{
     }
 })
 
-router.put('/updatePack', async (req,res)=>{
+router.put('/updatePack',authenticationMiddleware, async (req,res)=>{
     const pack = req.body;
     try{
         await GuidePack.replaceOne({_id: pack._id}, pack);
@@ -184,7 +183,7 @@ router.put('/updatePack', async (req,res)=>{
     }
 })
 
-router.get('/getUserPacks', async (req,res)=>{
+router.get('/getUserPacks',authenticationMiddleware, async (req,res)=>{
     try{
         const userPacks = await GuidePack.find({_id: {$in: req.user.guidePacks}});
 
@@ -194,7 +193,7 @@ router.get('/getUserPacks', async (req,res)=>{
     }
 });
 
-router.get("/getPublicPacks", (req,res)=>{
+router.get("/getPublicPacks",authenticationMiddleware, (req,res)=>{
     try{
         GuidePack.find({isPublic: true}, (err, docs)=>{
             if(err) throw new Error(err);
@@ -207,7 +206,7 @@ router.get("/getPublicPacks", (req,res)=>{
     }
 })
 
-router.delete('/deletePack', (req,res)=>{
+router.delete('/deletePack',authenticationMiddleware, (req,res)=>{
     const {packId} = req.query;
     try{
         Users.findOne({_id: req.user._id}, (err, user)=>{

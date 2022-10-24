@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect,useRef, useState} from 'react';
 import {Card, Title, Paragraph} from '../../components/globalStyles/styles';
-import {RoomWrapper, MicButtonWrappers, StreamAudio, EndButtonWrapper,DescriptionWrapper} from './styles';
+import {RoomWrapper, MicButtonWrappers, StreamAudio, EndButtonWrapper,DescriptionWrapper, FilesViewWrapper} from './styles';
 import { useParams } from 'react-router-dom';
 import { useMainContext } from '../../context/appContext';
 import RoomNetwork from '../../network/roomNetwork';
@@ -8,13 +8,21 @@ import ButtonComponent from '../../components/Button/ButtonComponent';
 import { myPeer } from '../../utils/peerConnection';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import {PDF, Img, Audio, Video} from '../../components/MediaElements/mediaElements'
+import FilesNetwork from '../../network/FilesNetwork';
+import {CircularProgress} from '@mui/material'
+import getFileType from '../../utils/getFileType';
 
 export default function Room(){
     const {roomId} = useParams();
     const streamRef = useRef();
+    const fileRef = useRef();
+    const mediaRef = useRef();
     const Navigate = useNavigate();
     const {room, socket, setRoom, language} = useMainContext();
     const [peerId, setPeerId] = useState('');
+    const [showFile, setShowFile] = useState(false);
+    const [fetchingFile, setFetchingFile] = useState(false);
 
     useEffect(()=>{
         if(!room){
@@ -48,7 +56,16 @@ export default function Room(){
             })
 
             socket.on('getFile', fileId=>{
-              
+                setShowFile(true);
+                fetchFile(fileId);
+            })
+
+            socket.on('startMedia', ()=>{
+                mediaRef.current?.play();
+            })
+
+            socket.on('stopMedia', ()=>{
+                mediaRef.current?.pause();
             })
         }
     }, [])
@@ -86,12 +103,43 @@ export default function Room(){
         })
     }
 
+    const getFilePlatform = ()=>{
+        switch(getFileType(fileRef.current?.type, language)){
+            case 'תמונה':
+                return <Img fileRef={fileRef} />
+            case 'מסמך':
+                return <PDF fileRef={fileRef} />
+            case 'שמע':
+                return <Audio mediaRef={mediaRef} roomId={roomId} fileRef={fileRef} />
+            case 'סרטון':
+                return <Video mediaRef={mediaRef} roomId={roomId} fileRef={fileRef} />
+            case 'Picture':
+                return <Img fileRef={fileRef} />
+            case 'Document':
+                return <PDF fileRef={fileRef} />
+            case 'Audio':
+                return <Audio mediaRef={mediaRef} roomId={roomId} fileRef={fileRef} />
+            case 'Video':
+                return <Video mediaRef={mediaRef} roomId={roomId} fileRef={fileRef} />
+            default:
+                return;
+        }
+    }
+
     const playStream =()=>{
         streamRef.current.play();
     }
 
     const stopStream = ()=>{
         streamRef.current.pause();
+    }
+
+    const fetchFile = (fileId)=>{
+        setFetchingFile(true);
+        FilesNetwork.download(fileId).then(file=>{
+            fileRef.current = file;
+            setFetchingFile(false);
+        })
     }
 
     return (
@@ -115,6 +163,18 @@ export default function Room(){
                         onClick={playStream}
                     />
                 </MicButtonWrappers>
+                {showFile && 
+                    <FilesViewWrapper>
+                        {
+                            fetchingFile ? 
+                                <CircularProgress 
+                                    color='success'
+                                    size={50}
+                                /> :
+                                getFilePlatform()
+                        }
+                    </FilesViewWrapper>
+                }
                 <EndButtonWrapper>
                     <ButtonComponent 
                         title={language ? 'יציאה מהטיול' : "Leave Tour"}

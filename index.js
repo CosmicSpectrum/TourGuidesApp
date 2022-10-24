@@ -50,6 +50,23 @@ io.on('connection', (socket)=>{
         socket.broadcast.to(roomId).emit('getFile',fileId);
     })
 
+    socket.on('playVideo', (roomId)=>{
+        socket.broadcast.to(roomId).emit('startMedia');
+    })
+
+
+    socket.on('pauseVideo', (roomId)=>{
+        socket.broadcast.to(roomId).emit('stopMedia');
+    })
+
+    socket.on('playAudio', (roomId)=>{
+        socket.broadcast.to(roomId).emit('startMedia');
+    })
+
+    socket.on('pauseAudio', (roomId)=>{
+        socket.broadcast.to(roomId).emit('stopMedia');
+    })
+
     socket.on('userLeave', (roomId, userId)=>{
         ListenersUtils.removeListener(userId,roomId).catch(err=>{
             console.log("remove user operation faild because: " + err.message);

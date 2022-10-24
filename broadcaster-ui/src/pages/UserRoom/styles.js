@@ -28,3 +28,9 @@ export const DescriptionWrapper = styled.div({
     width: "95%",
     direction: "ltr"
 })
+
+export const FilesViewWrapper = styled.div({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+})
