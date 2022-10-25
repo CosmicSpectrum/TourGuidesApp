@@ -33,12 +33,18 @@ export const Audio = ({fileRef,isAdmin,roomId, mediaRef})=>{
         src={URL.createObjectURL(fileRef.current)} 
         controls
         ref={mediaRef}
-        {...(isAdmin) && {onPlay: ()=>{
-            socket.emit('playAudio',roomId);
-        }}}
         {...(isAdmin) && {
             onPause: ()=>{
                 socket.emit('pauseAudio',roomId)
+            },
+            onTimeUpdate: (e)=>{
+                socket.emit("timeChange", roomId, e.target.currentTime)
+            },
+            onPlay: ()=>{
+                socket.emit('playAudio',roomId);
+            },
+            onVolumeChange: (e)=>{
+                socket.emit("muteMedia", roomId, e.target.muted);
             }
         }}
         style={{marginTop: '5%'}}
@@ -55,13 +61,18 @@ export const Video = ({fileRef,isAdmin,roomId, mediaRef})=>{
                 marginTop: "5%",
                 width: "90%"
             }}
-            {...(isAdmin) && {onPlay: ()=>{
-                socket.emit('playVideo', roomId);
-            }}}
-
             {...(isAdmin) && {
+                onPlay: ()=>{
+                    socket.emit('playVideo', roomId);
+                },
                 onPause: ()=>{
                     socket.emit('pauseVideo',roomId)
+                },
+                onTimeUpdate: (e)=>{
+                    socket.emit("timeChange", roomId, e.target.currentTime);
+                },
+                onVolumeChange: (e)=>{
+                    socket.emit("muteMedia", roomId, e.target.muted);
                 }
             }}
         >

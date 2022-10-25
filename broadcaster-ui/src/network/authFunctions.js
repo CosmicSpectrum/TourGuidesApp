@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookie from 'js-cookie'
 
 export default class AuthNetwork {
-    static #baseUrl = 'http://localhost:3001/';
+    static #baseUrl = '/';
 
     static getRoom(roomCode){
         return axios.get(`${this.#baseUrl}rooms/getRoomByCode?roomCode=${roomCode}`).then(res=>{

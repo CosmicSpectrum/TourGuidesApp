@@ -67,6 +67,18 @@ export default function Room(){
             socket.on('stopMedia', ()=>{
                 mediaRef.current?.pause();
             })
+
+            socket.on('hideMedia',()=>{
+                setShowFile(false);
+            })
+
+            socket.on('newMediaTime', (newTime) => {
+                mediaRef.current.currentTime = newTime;
+            })
+
+            socket.on('mute', muteStatus=>{
+                mediaRef.current.muted = muteStatus;
+            })
         }
     }, [])
 
@@ -79,6 +91,7 @@ export default function Room(){
             confirmButtonText: language ? "חזור לדף הבית" : "Back To Homepage",
         }).then(()=>{
             socket.emit('userLeave', roomId);
+            localStorage.clear();
             Navigate('/')
         })
     }
@@ -170,6 +183,7 @@ export default function Room(){
                                 <CircularProgress 
                                     color='success'
                                     size={50}
+                                    sx={{marginTop: "10%"}}
                                 /> :
                                 getFilePlatform()
                         }

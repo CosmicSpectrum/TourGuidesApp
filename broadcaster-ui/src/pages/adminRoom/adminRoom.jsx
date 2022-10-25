@@ -13,6 +13,7 @@ import { TextField, CircularProgress, Autocomplete } from '@mui/material';
 import FilesNetwork from "../../network/FilesNetwork";
 import getFileType from "../../utils/getFileType";
 import {PDF, Img, Audio, Video} from '../../components/MediaElements/mediaElements'
+import { ChangeCircleSharp } from "@mui/icons-material";
 
 export default function AdminRoom(){
     const [Stream , setStream] = useState(null);
@@ -26,6 +27,7 @@ export default function AdminRoom(){
     const Navigate = useNavigate();
     const {roomId} = useParams();
     const fileBuffer = useRef();
+    const cacheRef = useRef();
 
     useEffect(()=>{
         if(!user && Cookie.get("auth-token")){
@@ -46,6 +48,11 @@ export default function AdminRoom(){
                 setRoom(room);
             })
         }
+
+        createCache().then(cache=>{
+            cacheRef.current = cache;
+        })
+        
     },[])
 
     useEffect(()=>{
@@ -79,6 +86,10 @@ export default function AdminRoom(){
         }
     }, [Stream])
 
+    const createCache = async ()=>{
+        return await caches.open('admin-cache');
+    }
+
     const openMic = ()=>{
         if(!Stream){
             StartStream().then(stream => {
@@ -111,12 +122,17 @@ export default function AdminRoom(){
         fetchFile();
     }
 
-    const fetchFile = ()=>{
+    const fetchFile = async ()=>{
         setFecthingFile(true);
         FilesNetwork.download(selectedFile).then(blob=>{
             fileBuffer.current = blob;
             setFecthingFile(false)
         })
+    }
+
+    const hideFile = ()=>{
+        setShowFile(false);
+        socket.emit('hideFile', roomId);
     }
 
     const confirmEndTour = ()=>{
@@ -206,7 +222,7 @@ export default function AdminRoom(){
                             marginTop={"0%"}
                             title={language ? "הסתר קובץ" : "Hide File"}
                             disabled={showFile ? false : true}
-                            onClick={()=>setShowFile(false)}
+                            onClick={()=>hideFile()}
                             color={"error"}
                         />
                         <ButtonComponent 

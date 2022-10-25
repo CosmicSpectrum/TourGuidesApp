@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookie from 'js-cookie';
 
 export default class FilesNetwork {
-    static #baseUrl = 'http://localhost:3001/guidePacks';
+    static #baseUrl = '/guidePacks';
 
     static async getUserFiles(){
         return axios.get(this.#baseUrl + "/getUserFiles", 
@@ -101,7 +101,7 @@ export default class FilesNetwork {
     static download(fileKey){
         return axios.get(this.#baseUrl + `/download?fileKey=${fileKey}`,
         {headers: {'x-auth-token': Cookie.get('auth-token')},
-        responseType: 'blob'}).then(file=>{
+        responseType: 'blob'}).then((file)=>{
             if(file.data){
                 return file.data;
             }

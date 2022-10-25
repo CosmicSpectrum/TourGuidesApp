@@ -66,12 +66,24 @@ io.on('connection', (socket)=>{
     socket.on('pauseAudio', (roomId)=>{
         socket.broadcast.to(roomId).emit('stopMedia');
     })
+    
+    socket.on('hideFile', (roomId)=>{
+        socket.broadcast.to(roomId).emit('hideMedia')
+    })
+
+    socket.on('timeChange',(roomId, currentTime)=>{
+        socket.broadcast.to(roomId).emit('newMediaTime', currentTime);
+    })
 
     socket.on('userLeave', (roomId, userId)=>{
         ListenersUtils.removeListener(userId,roomId).catch(err=>{
             console.log("remove user operation faild because: " + err.message);
         })
         socket.leave(roomId);
+    })
+
+    socket.on('muteMedia', (roomId, muteStatus)=>{
+        socket.broadcast.to(roomId).emit('mute', muteStatus)
     })
 })
 

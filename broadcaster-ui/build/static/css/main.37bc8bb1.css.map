@@ -1,1 +1,0 @@
-{"version":3,"file":"static/css/main.37bc8bb1.css","mappings":"AAAA,WACI,qBAAsB,CACtB,8FACJ,CAEA,MACI,qBACJ","sources":["index.css"],"sourcesContent":["@font-face {\r\n    font-family: Assistant;\r\n    src: url('./fonts/Assistant-VariableFont_wght.ttf') format(\"truetype\");\r\n}\r\n\r\n.font{\r\n    font-family: \"Assistant\";\r\n}"],"names":[],"sourceRoot":""}
