@@ -226,7 +226,7 @@ router.delete('/deletePack',authenticationMiddleware, (req,res)=>{
     }
 })
 
-router.get('/getMimeType', authenticationMiddleware, async (req,res)=>{
+router.get('/getMimeType', async (req,res)=>{
     const {fileKey} = req.query;
     try{
         const file = await FileMetadata.findOne({uid: fileKey});
