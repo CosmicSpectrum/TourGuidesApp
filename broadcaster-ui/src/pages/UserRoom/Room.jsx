@@ -149,7 +149,7 @@ export default function Room(){
 
     const fetchFile = (fileId)=>{
         setFetchingFile(true);
-        FilesNetwork.download(fileId).then(file=>{
+        FilesNetwork.fetchFileFromCdn(fileId).then(file=>{
             fileRef.current = file;
             setFetchingFile(false);
         })

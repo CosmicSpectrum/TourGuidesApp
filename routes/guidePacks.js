@@ -226,4 +226,17 @@ router.delete('/deletePack',authenticationMiddleware, (req,res)=>{
     }
 })
 
+router.get('/getMimeType', authenticationMiddleware, async (req,res)=>{
+    const {fileKey} = req.query;
+    try{
+        const file = await FileMetadata.findOne({uid: fileKey});
+        if(file){
+            return res.status(200).json(file.mimeType);
+        }
+        return res.status(404).send('file not found');
+    }catch(err){
+        return res.status(500).send('something went wrong');
+    }
+})
+
 module.exports = router;

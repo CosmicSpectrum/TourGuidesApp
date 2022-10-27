@@ -124,7 +124,7 @@ export default function AdminRoom(){
 
     const fetchFile = async ()=>{
         setFecthingFile(true);
-        FilesNetwork.download(selectedFile).then(blob=>{
+        FilesNetwork.fetchFileFromCdn(selectedFile).then(blob=>{
             fileBuffer.current = blob;
             setFecthingFile(false)
         })

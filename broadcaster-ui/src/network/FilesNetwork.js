@@ -3,6 +3,7 @@ import Cookie from 'js-cookie';
 
 export default class FilesNetwork {
     static #baseUrl = '/guidePacks';
+    static #cdnUrl = 'https://d1vo2t8x9ce71s.cloudfront.net/';
 
     static async getUserFiles(){
         return axios.get(this.#baseUrl + "/getUserFiles", 
@@ -109,6 +110,16 @@ export default class FilesNetwork {
             console.error(err);
             throw err;
         })
+    }
+
+    static fetchFileFromCdn(filekey){
+        return axios.get(this.#cdnUrl + filekey,
+            {responseType: "blob"})
+            .then(async ({data})=>{
+                const res = await axios.get(this.#baseUrl + `/getMimeType?fileKey=${filekey}`, 
+                    {headers: {'x-auth-token': Cookie.get('auth-token')}});
+                return new Blob([data], {type: res.data});
+            })
     }
 
     static delete(fileKey){
